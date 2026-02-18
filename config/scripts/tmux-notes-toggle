@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Toggle notes preview panel in current tmux window
+# Tracks pane via @notes_pane_ID variable per window
+
+WINDOW_ID=$(tmux display-message -p '#{window_id}')
+VAR_NAME="@notes_pane_${WINDOW_ID}"
+
+# Get stored pane ID for this window
+stored_pane=$(tmux show-environment -g "$VAR_NAME" 2>/dev/null | cut -d= -f2)
+
+# Check if that pane still exists
+if [[ -n "$stored_pane" ]] && tmux list-panes -F '#{pane_id}' | grep -qF "$stored_pane"; then
+  # Pane exists - kill it
+  tmux kill-pane -t "$stored_pane"
+  tmux set-environment -gu "$VAR_NAME"
+else
+  # Pane doesn't exist - create it
+  notes_file=$(~/.local/bin/tmux-notes)
+  new_pane=$(tmux split-window -h -l 25% -d -P -F '#{pane_id}' \
+    "~/.local/bin/tmux-notes-preview '$notes_file'")
+  tmux set-environment -g "$VAR_NAME" "$new_pane"
+fi

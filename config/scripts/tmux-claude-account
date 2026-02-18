@@ -1,0 +1,217 @@
+#!/usr/bin/env bash
+# Interactive Claude Code account switcher for tmux popup
+# Shows saved accounts with live rate limits, switches on Enter
+
+set -euo pipefail
+
+ACCOUNTS_DIR="$HOME/.claude/accounts"
+CLAUDE_JSON="$HOME/.claude.json"
+KEYCHAIN_SERVICE="Claude Code-credentials"
+USAGE_API="https://api.anthropic.com/api/oauth/usage"
+
+# Colors
+R='\033[0m'
+B='\033[1m'
+G='\033[32m'
+Y='\033[33m'
+C='\033[36m'
+D='\033[2m'
+RED='\033[31m'
+BG_SEL='\033[7m'
+
+# Color for percentage
+pct_color() {
+    local pct=$1
+    if [ "$pct" -lt 50 ]; then echo -ne '\033[32m'
+    elif [ "$pct" -lt 80 ]; then echo -ne '\033[33m'
+    else echo -ne '\033[31m'; fi
+}
+
+# Get current email
+current_email=""
+if [ -f "$CLAUDE_JSON" ]; then
+    current_email=$(jq -r '.oauthAccount.emailAddress // empty' "$CLAUDE_JSON" 2>/dev/null)
+fi
+
+# Build account list
+declare -a names emails subs tokens
+idx=0
+
+for account_dir in "$ACCOUNTS_DIR"/*/; do
+    [ -d "$account_dir" ] || continue
+    name=$(basename "$account_dir")
+    email="?"
+    sub="?"
+    token=""
+    [ -f "$account_dir/metadata.json" ] && email=$(jq -r '.oauthAccount.emailAddress // "?"' "$account_dir/metadata.json" 2>/dev/null)
+    [ -f "$account_dir/credentials.json" ] && sub=$(jq -r '.claudeAiOauth.subscriptionType // "?"' "$account_dir/credentials.json" 2>/dev/null)
+    [ -f "$account_dir/credentials.json" ] && token=$(jq -r '.claudeAiOauth.accessToken // ""' "$account_dir/credentials.json" 2>/dev/null)
+    names+=("$name")
+    emails+=("$email")
+    subs+=("$sub")
+    tokens+=("$token")
+    idx=$((idx + 1))
+done
+
+if [ "$idx" -eq 0 ]; then
+    echo -e "${RED}No saved accounts.${R}"
+    echo -e "Save current: ${C}claude-account save <name>${R}"
+    echo ""
+    echo -e "${D}Press any key to close${R}"
+    read -rsn1
+    exit 0
+fi
+
+# Fetch usage for all accounts in parallel
+declare -a usage_data
+tmpdir=$(mktemp -d)
+trap 'rm -rf "$tmpdir"' EXIT
+
+for i in "${!tokens[@]}"; do
+    if [ -n "${tokens[$i]}" ]; then
+        (
+            curl -s --max-time 4 \
+                -H "Authorization: Bearer ${tokens[$i]}" \
+                -H "anthropic-beta: oauth-2025-04-20" \
+                -H "Content-Type: application/json" \
+                "$USAGE_API" > "$tmpdir/$i.json" 2>/dev/null || echo '{}' > "$tmpdir/$i.json"
+        ) &
+    else
+        echo '{}' > "$tmpdir/$i.json"
+    fi
+done
+wait
+
+# Parse usage data
+declare -a u_5h u_7d u_eu
+for i in "${!names[@]}"; do
+    u_5h[$i]=$(jq -r '.five_hour.utilization // -1 | floor' "$tmpdir/$i.json" 2>/dev/null || echo "-1")
+    u_7d[$i]=$(jq -r '.seven_day.utilization // -1 | floor' "$tmpdir/$i.json" 2>/dev/null || echo "-1")
+    u_eu[$i]=$(jq -r 'if .extra_usage.is_enabled then "\(.extra_usage.used_credits // 0 | . / 100 | floor)$" else "off" end' "$tmpdir/$i.json" 2>/dev/null || echo "?")
+done
+
+# Find initial selection (default to first non-active account)
+sel=0
+for i in "${!emails[@]}"; do
+    if [ "${emails[$i]}" != "$current_email" ]; then
+        sel=$i
+        break
+    fi
+done
+
+# Format usage line for an account
+fmt_usage() {
+    local i=$1
+    local out=""
+
+    if [ "${u_5h[$i]}" -ge 0 ]; then
+        local c5; c5=$(pct_color "${u_5h[$i]}")
+        out="⏳ ${c5}${u_5h[$i]}%${R}"
+    fi
+
+    if [ "${u_7d[$i]}" -ge 0 ]; then
+        local c7; c7=$(pct_color "${u_7d[$i]}")
+        out="${out}  📅 ${c7}${u_7d[$i]}%${R}"
+    fi
+
+    if [ "${u_eu[$i]}" != "?" ] && [ "${u_eu[$i]}" != "off" ]; then
+        out="${out}  💳 ${D}${u_eu[$i]}${R}"
+    fi
+
+    echo -ne "$out"
+}
+
+# Draw the UI
+draw() {
+    clear
+    echo -e "${B} Claude Code Accounts${R}"
+    echo -e "${D} ─────────────────────────────────────────────────────────${R}"
+    echo ""
+
+    for i in "${!names[@]}"; do
+        local active=""
+        if [ "${emails[$i]}" = "$current_email" ]; then
+            active=" ${G}●${R}"
+        fi
+
+        local usage; usage=$(fmt_usage "$i")
+        local name_pad; name_pad=$(printf "%-14s" "${names[$i]}")
+
+        if [ "$i" -eq "$sel" ]; then
+            echo -e "  ${BG_SEL} → ${name_pad} ${emails[$i]}  (${subs[$i]})${active} ${R}"
+            if [ -n "$usage" ]; then
+                echo -e "     ${usage}"
+            fi
+        else
+            echo -e "     ${B}${name_pad}${R} ${C}${emails[$i]}${R}  ${D}(${subs[$i]})${R}${active}"
+            if [ -n "$usage" ]; then
+                echo -e "     ${usage}"
+            fi
+        fi
+        echo ""
+    done
+
+    echo -e "${D} ↑↓/jk navigate  │  Enter switch  │  Esc cancel  │  r refresh${R}"
+}
+
+draw
+
+while true; do
+    IFS= read -rsn1 key
+
+    case "$key" in
+        $'\x1b')
+            read -rsn2 -t 0.1 seq || true
+            case "$seq" in
+                '[A') sel=$(( (sel - 1 + idx) % idx )); draw ;;
+                '[B') sel=$(( (sel + 1) % idx )); draw ;;
+                '') exit 0 ;;
+            esac
+            ;;
+        'k') sel=$(( (sel - 1 + idx) % idx )); draw ;;
+        'j') sel=$(( (sel + 1) % idx )); draw ;;
+        'r')
+            # Refresh usage data
+            echo -e "\n  ${D}Refreshing...${R}"
+            for i in "${!tokens[@]}"; do
+                if [ -n "${tokens[$i]}" ]; then
+                    (
+                        curl -s --max-time 4 \
+                            -H "Authorization: Bearer ${tokens[$i]}" \
+                            -H "anthropic-beta: oauth-2025-04-20" \
+                            -H "Content-Type: application/json" \
+                            "$USAGE_API" > "$tmpdir/$i.json" 2>/dev/null || true
+                    ) &
+                fi
+            done
+            wait
+            for i in "${!names[@]}"; do
+                u_5h[$i]=$(jq -r '.five_hour.utilization // -1 | floor' "$tmpdir/$i.json" 2>/dev/null || echo "-1")
+                u_7d[$i]=$(jq -r '.seven_day.utilization // -1 | floor' "$tmpdir/$i.json" 2>/dev/null || echo "-1")
+                u_eu[$i]=$(jq -r 'if .extra_usage.is_enabled then "\(.extra_usage.used_credits // 0 | . / 100 | floor)$" else "off" end' "$tmpdir/$i.json" 2>/dev/null || echo "?")
+            done
+            draw
+            ;;
+        '')
+            if [ "${emails[$sel]}" = "$current_email" ]; then
+                exit 0
+            fi
+
+            clear
+            echo -e "${B} Switching to ${names[$sel]}...${R}"
+            echo ""
+
+            ~/.claude/claude-account use "${names[$sel]}" 2>&1
+
+            echo ""
+            echo -e "${B}${G} Done!${R}"
+            echo ""
+            echo -e " In Claude Code: press ${B}Esc${R} then ${C}claude -c${R}"
+            echo ""
+            echo -e "${D} Press any key to close${R}"
+            read -rsn1
+            exit 0
+            ;;
+        'q') exit 0 ;;
+    esac
+done

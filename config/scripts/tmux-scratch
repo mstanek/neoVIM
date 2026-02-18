@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Returns path to project-specific scratchpad file (creates if needed)
+
+pane_path=$(tmux display-message -p '#{pane_current_path}')
+git_root=$(cd "$pane_path" && git rev-parse --show-toplevel 2>/dev/null)
+
+if [[ -n "$git_root" ]]; then
+  project_key="${git_root//\//-}"
+  notes_dir="$HOME/.claude/projects/${project_key}/notes"
+else
+  notes_dir="$HOME/.claude/notes"
+fi
+
+mkdir -p "$notes_dir"
+scratch_file="$notes_dir/scratch.md"
+
+if [[ ! -f "$scratch_file" ]]; then
+  cat > "$scratch_file" << 'TEMPLATE'
+# Scratchpad
+
+> Quick notes, code snippets, SQL queries, temporary thoughts.
+> This file is not structured - use it freely.
+
+---
+
+TEMPLATE
+fi
+
+echo "$scratch_file"

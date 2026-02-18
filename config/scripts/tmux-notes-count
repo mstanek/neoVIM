@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# Output task count for tmux status bar: 📋 2 ⏳ 1 ✓ 3
+# Fast - reads file directly, no heavy dependencies
+
+pane_path=$(tmux display-message -p '#{pane_current_path}' 2>/dev/null)
+git_root=$(cd "$pane_path" 2>/dev/null && git rev-parse --show-toplevel 2>/dev/null)
+
+if [[ -n "$git_root" ]]; then
+  project_key="${git_root//\//-}"
+  notes_file="$HOME/.claude/projects/${project_key}/notes/todo.md"
+else
+  notes_file="$HOME/.claude/notes/todo.md"
+fi
+
+[[ ! -f "$notes_file" ]] && exit 0
+
+in_progress=0
+backlog=0
+done=0
+current_section=""
+
+while IFS= read -r line; do
+  if [[ "$line" =~ ^##\  ]]; then
+    current_section="$line"
+  elif [[ "$line" =~ ^-\ \[.\] ]]; then
+    case "$current_section" in
+      *"In Progress"*) ((in_progress++)) ;;
+      *"Backlog"*)     ((backlog++)) ;;
+      *"Done"*)        ((done++)) ;;
+    esac
+  fi
+done < "$notes_file"
+
+total=$((in_progress + backlog))
+
+# Only show if there are any tasks
+if [[ $total -eq 0 && $done -eq 0 ]]; then
+  exit 0
+fi
+
+output=""
+[[ $in_progress -gt 0 ]] && output+="⏳${in_progress}"
+[[ $backlog -gt 0 ]]     && output+=" 📋${backlog}"
+[[ $done -gt 0 ]]        && output+=" ✓${done}"
+
+echo "${output# }"

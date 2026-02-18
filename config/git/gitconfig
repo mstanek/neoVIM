@@ -1,0 +1,70 @@
+[user]
+	email = YOUR_EMAIL@example.com
+	name = YOUR_NAME
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+[core]
+	excludesfile = ~/.gitignore_global
+	whitespace = trailing-space,space-before-tab
+	editor = code --wait  # dla VS Code
+	pager = delta
+[fetch]
+	prune = true # Automatyczne usuwanie branchy które zostały zmerge'owane
+[pull]
+	rebase = true
+[rebase]
+	autoStash = true
+[color]
+	ui = auto
+[diff]
+	colorMoved = zebra
+	tool = meld
+[log]
+	date = relative
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+[commit]
+	template = ~/.stCommitMsg
+[pager]
+	diff = delta
+	log = delta
+	reflog = delta
+	show = delta
+	blame = delta
+	branch = false
+[merge]
+	tool = meld
+[mergetool "vscode"]
+	cmd = "code --wait "
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	navigate = true
+	side-by-side = true
+	line-numbers = true
+	syntax-theme = Catppuccin Mocha
+	hyperlinks = true
+	hyperlinks-file-link-format = "file://{path}:{line}"
+	file-style = bold yellow ul
+	file-decoration-style = none
+	hunk-header-decoration-style = cyan box ul
+	blame-palette = "#1e1e2e #313244 #45475a #585b70"
+[gitbutler]
+	aiModelProvider = anthropic
+	aiAnthropicKeyOption = butlerAPI
+[difftool "meld"]
+	path = /Applications/Meld.app/Contents/MacOS/Meld
+[mergetool "meld"]
+	path = /Applications/Meld.app/Contents/MacOS/Meld
+	trustExitCode = true
+[difftool]
+	prompt = false

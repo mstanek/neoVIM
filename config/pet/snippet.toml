@@ -1,0 +1,1950 @@
+# ═══════════════════════════════════════════════════════════════
+# Docker
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "Docker: uruchom dev environment"
+  command = "cd ~/GIT/NovaMRP/scripts/config/development && docker-compose -f docker-compose.dev.yml up -d"
+  tag = ["docker", "novamrp"]
+
+[[snippets]]
+  description = "Docker: zatrzymaj dev environment"
+  command = "cd ~/GIT/NovaMRP/scripts/config/development && docker-compose -f docker-compose.dev.yml down"
+  tag = ["docker", "novamrp"]
+
+[[snippets]]
+  description = "Docker: restart kontenera"
+  command = "docker restart <container_name>"
+  tag = ["docker"]
+
+[[snippets]]
+  description = "Docker: logi kontenera (follow)"
+  command = "docker logs -f --tail 100 <container_name>"
+  tag = ["docker"]
+
+[[snippets]]
+  description = "Docker: shell w kontenerze"
+  command = "docker exec -it <container_name> /bin/bash"
+  tag = ["docker"]
+
+[[snippets]]
+  description = "Docker: wyczyść nieużywane obrazy/volumes"
+  command = "docker system prune -a --volumes"
+  tag = ["docker"]
+
+[[snippets]]
+  description = "Docker: statystyki kontenerów (CPU/RAM)"
+  command = "docker stats --format 'table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}'"
+  tag = ["docker"]
+
+[[snippets]]
+  description = "Docker: skopiuj plik z kontenera na hosta"
+  command = "docker cp <container_name>:<container_path> <host_path>"
+  tag = ["docker"]
+
+[[snippets]]
+  description = "Docker: skopiuj plik z hosta do kontenera"
+  command = "docker cp <host_path> <container_name>:<container_path>"
+  tag = ["docker"]
+
+[[snippets]]
+  description = "Docker: build image z tagiem"
+  command = "docker build -t <image_name>:<tag> ."
+  tag = ["docker"]
+
+[[snippets]]
+  description = "Docker: inspect kontenera (JSON)"
+  command = "docker inspect <container_name> | jq ."
+  tag = ["docker"]
+
+[[snippets]]
+  description = "Docker: pokaż procesy w kontenerze"
+  command = "docker top <container_name>"
+  tag = ["docker"]
+
+[[snippets]]
+  description = "Docker: lista volumes"
+  command = "docker volume ls"
+  tag = ["docker"]
+
+# ═══════════════════════════════════════════════════════════════
+# Git
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "Git: diff vs main (lista plików)"
+  command = "git diff --name-only $(git merge-base main HEAD)...HEAD"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: log oneline z grafem (last 20)"
+  command = "git log --oneline --graph --decorate -20"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: kto ostatnio zmieniał plik"
+  command = "git log --oneline -10 -- <file_path>"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: blame z kolorami"
+  command = "git blame -w --color-lines <file_path>"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: cofnij ostatni commit (zachowaj zmiany)"
+  command = "git reset --soft HEAD~1"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: stash z opisem"
+  command = "git stash push -m '<message>'"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: cherry-pick commit"
+  command = "git cherry-pick <commit_hash>"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: lista branchy posortowana po dacie"
+  command = "git branch --sort=-committerdate --format='%(committerdate:short) %(refname:short)' | head -20"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: usuń plik z repo ale zostaw lokalnie"
+  command = "git rm --cached <file_path>"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: odzyskaj usunięty commit (reflog)"
+  command = "git reflog"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: porównaj dwa branche"
+  command = "git diff <branch_1>..<branch_2>"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: unstage wszystkie pliki"
+  command = "git reset HEAD"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: pliki zmienione w commicie"
+  command = "git show --name-only <commit_hash>"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: usuń lokalne branche bez remote"
+  command = "git fetch -p && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -d"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: zastosuj konkretny stash"
+  command = "git stash apply stash@{<n>}"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: szukaj tekstu w historii commitów"
+  command = "git log -S '<search_text>' --oneline"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: kto ile linii napisał (stats)"
+  command = "git shortlog -sn --all"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: klonuj z submodułami"
+  command = "git clone --recursive <repo_url>"
+  tag = ["git"]
+
+# ═══════════════════════════════════════════════════════════════
+# MySQL
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "MySQL: połącz z NovaMRP"
+  command = "mysql -u DB_USER -pDB_PASSWORD intranet2"
+  tag = ["mysql", "novamrp"]
+
+[[snippets]]
+  description = "MySQL: pokaż strukturę tabeli"
+  command = "mysql -u DB_USER -pDB_PASSWORD intranet2 -e 'DESCRIBE <table_name>'"
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: szukaj tabeli po nazwie"
+  command = "mysql -u DB_USER -pDB_PASSWORD intranet2 -e \"SHOW TABLES LIKE '%<pattern>%'\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: rozmiar tabel (top 20)"
+  command = "mysql -u DB_USER -pDB_PASSWORD intranet2 -e \"SELECT table_name, ROUND(data_length/1024/1024, 2) AS size_mb, table_rows FROM information_schema.tables WHERE table_schema='intranet2' ORDER BY data_length DESC LIMIT 20\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: dump tabeli do SQL"
+  command = "mysqldump -u DB_USER -pDB_PASSWORD intranet2 <table_name> > <output_file>.sql"
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: aktywne procesy"
+  command = "mysql -u DB_USER -pDB_PASSWORD -e 'SHOW FULL PROCESSLIST'"
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: restore bazy z pliku"
+  command = "mysql -u DB_USER -pDB_PASSWORD intranet2 < <sql_file>"
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: rozmiar wszystkich baz"
+  command = "mysql -u DB_USER -pDB_PASSWORD -e \"SELECT table_schema AS db, ROUND(SUM(data_length + index_length)/1024/1024, 2) AS 'size_mb' FROM information_schema.tables GROUP BY table_schema ORDER BY size_mb DESC\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: pokaż indeksy tabeli"
+  command = "mysql -u DB_USER -pDB_PASSWORD intranet2 -e 'SHOW INDEX FROM <table_name>'"
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: zabij długo działające query"
+  command = "mysql -u DB_USER -pDB_PASSWORD -e 'KILL <process_id>'"
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: pokaż uprawnienia użytkownika"
+  command = "mysql -u DB_USER -pDB_PASSWORD -e \"SHOW GRANTS FOR '<username>'@'localhost'\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: dump całej bazy (backup)"
+  command = "mysqldump -u DB_USER -pDB_PASSWORD intranet2 > ~/backup_intranet2_$(date +%Y%m%d).sql"
+  tag = ["mysql"]
+
+# ═══════════════════════════════════════════════════════════════
+# Python / Backend
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "Backend: quality check (lint + type + security)"
+  command = "cd ~/GIT/NovaMRP/backend && make quality"
+  tag = ["python", "novamrp"]
+
+[[snippets]]
+  description = "Backend: deep analysis (clones, coupling, complexity)"
+  command = "cd ~/GIT/NovaMRP/backend && make quality-deep"
+  tag = ["python", "novamrp"]
+
+[[snippets]]
+  description = "Backend: tylko lint (ruff)"
+  command = "cd ~/GIT/NovaMRP/backend && make lint"
+  tag = ["python", "novamrp"]
+
+[[snippets]]
+  description = "Backend: type check (mypy)"
+  command = "cd ~/GIT/NovaMRP/backend && make type-check"
+  tag = ["python", "novamrp"]
+
+[[snippets]]
+  description = "Backend: uruchom migrację"
+  command = "cd ~/GIT/NovaMRP && npm run db:migrate"
+  tag = ["python", "novamrp"]
+
+[[snippets]]
+  description = "Python: pip install w venv_prod"
+  command = "cd ~/GIT/NovaMRP/backend && venv_prod/bin/pip install <package>"
+  tag = ["python", "novamrp"]
+
+[[snippets]]
+  description = "Python: szukaj dead code (vulture)"
+  command = "cd ~/GIT/NovaMRP/backend && make dead-code"
+  tag = ["python", "novamrp"]
+
+[[snippets]]
+  description = "Python: lokalny HTTP server"
+  command = "python -m http.server <port>"
+  tag = ["python"]
+
+[[snippets]]
+  description = "Python: sformatuj JSON z pliku"
+  command = "python -m json.tool <file>"
+  tag = ["python", "json"]
+
+[[snippets]]
+  description = "Python: stwórz venv"
+  command = "python -m venv <env_name>"
+  tag = ["python"]
+
+[[snippets]]
+  description = "Python: aktywuj venv"
+  command = "source <env_name>/bin/activate"
+  tag = ["python"]
+
+[[snippets]]
+  description = "Python: pip freeze do requirements"
+  command = "pip freeze > requirements.txt"
+  tag = ["python"]
+
+[[snippets]]
+  description = "Python: zainstaluj z requirements.txt"
+  command = "pip install -r requirements.txt"
+  tag = ["python"]
+
+# ═══════════════════════════════════════════════════════════════
+# Frontend / Vue / TypeScript / NPM
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "Frontend: type check (vue-tsc)"
+  command = "cd ~/GIT/NovaMRP/web && npx vue-tsc --noEmit"
+  tag = ["frontend", "novamrp"]
+
+[[snippets]]
+  description = "Frontend: lint fix"
+  command = "cd ~/GIT/NovaMRP/web && npx eslint --fix <file_path>"
+  tag = ["frontend", "novamrp"]
+
+[[snippets]]
+  description = "Frontend: szukaj brakujących i18n kluczy"
+  command = "cd ~/GIT/NovaMRP/web && node scripts/check-i18n-keys.js"
+  tag = ["frontend", "novamrp"]
+
+[[snippets]]
+  description = "NPM: lista globalnych pakietów"
+  command = "npm list -g --depth=0"
+  tag = ["npm"]
+
+[[snippets]]
+  description = "NPM: sprawdź outdated packages"
+  command = "npm outdated"
+  tag = ["npm"]
+
+[[snippets]]
+  description = "NPM: update all do latest"
+  command = "npx npm-check-updates -u && npm install"
+  tag = ["npm"]
+
+[[snippets]]
+  description = "NPM: zainstaluj konkretną wersję"
+  command = "npm install <package>@<version>"
+  tag = ["npm"]
+
+[[snippets]]
+  description = "NPM: dlaczego pakiet jest zainstalowany"
+  command = "npm ls <package>"
+  tag = ["npm"]
+
+[[snippets]]
+  description = "NPM: wyczyść cache"
+  command = "npm cache clean --force"
+  tag = ["npm"]
+
+# ═══════════════════════════════════════════════════════════════
+# SSH / SCP / Rsync
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "SSH: połącz z custom portem"
+  command = "ssh -p <port> <user>@<host>"
+  tag = ["ssh"]
+
+[[snippets]]
+  description = "SSH: połącz z konkretnym kluczem"
+  command = "ssh -i <key_path> <user>@<host>"
+  tag = ["ssh"]
+
+[[snippets]]
+  description = "SSH: tunel portów (forward)"
+  command = "ssh -L <local_port>:localhost:<remote_port> <user>@<host>"
+  tag = ["ssh"]
+
+[[snippets]]
+  description = "SCP: kopiuj folder rekurencyjnie"
+  command = "scp -r <source> <user>@<host>:<dest>"
+  tag = ["ssh"]
+
+[[snippets]]
+  description = "SCP: z custom portem"
+  command = "scp -P <port> <source> <user>@<host>:<dest>"
+  tag = ["ssh"]
+
+[[snippets]]
+  description = "Rsync: z progress i kompresją"
+  command = "rsync -avz --progress <source> <user>@<host>:<dest>"
+  tag = ["ssh"]
+
+[[snippets]]
+  description = "Rsync: dry-run (test bez zmian)"
+  command = "rsync -avzn <source> <dest>"
+  tag = ["ssh"]
+
+[[snippets]]
+  description = "Rsync: z exclude pattern"
+  command = "rsync -avz --exclude='<pattern>' <source> <dest>"
+  tag = ["ssh"]
+
+# ═══════════════════════════════════════════════════════════════
+# HTTP / Curl
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "Curl: GET z pretty JSON"
+  command = "curl -s <url> | jq ."
+  tag = ["http"]
+
+[[snippets]]
+  description = "Curl: POST JSON"
+  command = "curl -s -X POST -H 'Content-Type: application/json' -d '<json_body>' <url> | jq ."
+  tag = ["http"]
+
+[[snippets]]
+  description = "Curl: z Bearer token"
+  command = "curl -s -H 'Authorization: Bearer <token>' <url> | jq ."
+  tag = ["http"]
+
+[[snippets]]
+  description = "Curl: pokaż tylko HTTP status code"
+  command = "curl -o /dev/null -s -w '%{http_code}\\n' <url>"
+  tag = ["http"]
+
+[[snippets]]
+  description = "Curl: follow redirects"
+  command = "curl -L <url>"
+  tag = ["http"]
+
+[[snippets]]
+  description = "Curl: z timeoutem"
+  command = "curl --max-time <seconds> <url>"
+  tag = ["http"]
+
+[[snippets]]
+  description = "Curl: pobierz plik"
+  command = "curl -o <filename> <url>"
+  tag = ["http"]
+
+[[snippets]]
+  description = "Curl: pokaż nagłówki odpowiedzi"
+  command = "curl -I <url>"
+  tag = ["http"]
+
+# ═══════════════════════════════════════════════════════════════
+# JSON / jq
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "jq: sformatuj plik"
+  command = "jq '.' <file>"
+  tag = ["json"]
+
+[[snippets]]
+  description = "jq: wyciągnij pole"
+  command = "jq '.<field>' <file>"
+  tag = ["json"]
+
+[[snippets]]
+  description = "jq: pole z każdego elementu array"
+  command = "jq '.[].< field>' <file>"
+  tag = ["json"]
+
+[[snippets]]
+  description = "jq: filtruj array po wartości"
+  command = "jq '.[] | select(.<field> == \"<value>\")' <file>"
+  tag = ["json"]
+
+[[snippets]]
+  description = "jq: raw output bez quotes"
+  command = "jq -r '.<field>' <file>"
+  tag = ["json"]
+
+[[snippets]]
+  description = "jq: policz elementy array"
+  command = "jq '. | length' <file>"
+  tag = ["json"]
+
+[[snippets]]
+  description = "jq: klucze obiektu"
+  command = "jq 'keys' <file>"
+  tag = ["json"]
+
+# ═══════════════════════════════════════════════════════════════
+# Archiwa (tar/zip)
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "Tar: spakuj folder (gzip)"
+  command = "tar -czvf <archive>.tar.gz <directory>"
+  tag = ["archive"]
+
+[[snippets]]
+  description = "Tar: rozpakuj"
+  command = "tar -xzvf <archive>.tar.gz"
+  tag = ["archive"]
+
+[[snippets]]
+  description = "Tar: rozpakuj do konkretnego folderu"
+  command = "tar -xzvf <archive>.tar.gz -C <directory>"
+  tag = ["archive"]
+
+[[snippets]]
+  description = "Tar: spakuj z exclude"
+  command = "tar --exclude='<pattern>' -czvf <archive>.tar.gz <directory>"
+  tag = ["archive"]
+
+[[snippets]]
+  description = "Zip: spakuj folder rekurencyjnie"
+  command = "zip -r <archive>.zip <directory>"
+  tag = ["archive"]
+
+[[snippets]]
+  description = "Unzip: rozpakuj do folderu"
+  command = "unzip <archive>.zip -d <directory>"
+  tag = ["archive"]
+
+[[snippets]]
+  description = "Unzip: pokaż zawartość bez rozpakowywania"
+  command = "unzip -l <archive>.zip"
+  tag = ["archive"]
+
+# ═══════════════════════════════════════════════════════════════
+# Tekst (sed/awk/grep)
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "sed: zamień tekst w pliku (in-place macOS)"
+  command = "sed -i '' 's/<old_text>/<new_text>/g' <file>"
+  tag = ["text"]
+
+[[snippets]]
+  description = "sed: usuń linie zawierające pattern"
+  command = "sed -i '' '/<pattern>/d' <file>"
+  tag = ["text"]
+
+[[snippets]]
+  description = "awk: wydrukuj konkretną kolumnę"
+  command = "awk '{print $<column_number>}' <file>"
+  tag = ["text"]
+
+[[snippets]]
+  description = "awk: suma wartości w kolumnie"
+  command = "awk '{sum+=$<column_number>} END {print sum}' <file>"
+  tag = ["text"]
+
+[[snippets]]
+  description = "sort | uniq: policz unikalne linie"
+  command = "sort <file> | uniq -c | sort -rn | head -20"
+  tag = ["text"]
+
+[[snippets]]
+  description = "wc: policz linie/słowa/znaki"
+  command = "wc -l <file>"
+  tag = ["text"]
+
+[[snippets]]
+  description = "diff: porównaj dwa pliki"
+  command = "diff --color <file1> <file2>"
+  tag = ["text"]
+
+# ═══════════════════════════════════════════════════════════════
+# System / macOS / Network
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "macOS: flush DNS cache"
+  command = "sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder"
+  tag = ["macos"]
+
+[[snippets]]
+  description = "macOS: kto słucha na porcie"
+  command = "lsof -i :<port> -P -n"
+  tag = ["macos", "network"]
+
+[[snippets]]
+  description = "macOS: kill procesu na porcie"
+  command = "kill -9 $(lsof -t -i :<port>)"
+  tag = ["macos", "network"]
+
+[[snippets]]
+  description = "macOS: wszystkie otwarte porty"
+  command = "lsof -i -P -n | grep LISTEN"
+  tag = ["macos", "network"]
+
+[[snippets]]
+  description = "macOS: routing table"
+  command = "netstat -rn"
+  tag = ["macos", "network"]
+
+[[snippets]]
+  description = "macOS: info o sieci Wi-Fi"
+  command = "networksetup -getinfo Wi-Fi"
+  tag = ["macos", "network"]
+
+[[snippets]]
+  description = "macOS: publiczne IP"
+  command = "curl -s ifconfig.me"
+  tag = ["macos", "network"]
+
+[[snippets]]
+  description = "macOS: lokalne IP"
+  command = "ipconfig getifaddr en0"
+  tag = ["macos", "network"]
+
+[[snippets]]
+  description = "Znajdź duże pliki (>100MB)"
+  command = "fd --size +100m --type f ."
+  tag = ["system"]
+
+[[snippets]]
+  description = "Rozmiar katalogów (top 10)"
+  command = "du -sh */ | sort -rh | head -10"
+  tag = ["system"]
+
+[[snippets]]
+  description = "Zabij proces po nazwie"
+  command = "pkill -f <process_name>"
+  tag = ["system"]
+
+[[snippets]]
+  description = "Znajdź pliki zmodyfikowane w ostatnich N dniach"
+  command = "fd --changed-within <n>d --type f ."
+  tag = ["system"]
+
+[[snippets]]
+  description = "Backup pliku z datą"
+  command = "cp <file> <file>.$(date +%Y%m%d-%H%M%S).bak"
+  tag = ["system"]
+
+[[snippets]]
+  description = "Top 15 najczęstszych komend w historii"
+  command = "history | awk '{print $2}' | sort | uniq -c | sort -rn | head -15"
+  tag = ["system"]
+
+[[snippets]]
+  description = "Zajętość dysku"
+  command = "df -h"
+  tag = ["system"]
+
+# ═══════════════════════════════════════════════════════════════
+# Tmux
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "Tmux: nowa sesja z nazwą"
+  command = "tmux new-session -s <session_name>"
+  tag = ["tmux"]
+
+[[snippets]]
+  description = "Tmux: attach do sesji"
+  command = "tmux attach -t <session_name>"
+  tag = ["tmux"]
+
+[[snippets]]
+  description = "Tmux: lista sesji"
+  command = "tmux list-sessions"
+  tag = ["tmux"]
+
+[[snippets]]
+  description = "Tmux: zamknij sesję"
+  command = "tmux kill-session -t <session_name>"
+  tag = ["tmux"]
+
+[[snippets]]
+  description = "Tmux: zamknij wszystkie sesje oprócz bieżącej"
+  command = "tmux kill-session -a"
+  tag = ["tmux"]
+
+# ═══════════════════════════════════════════════════════════════
+# Brew
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "Brew: aktualizuj wszystko"
+  command = "brew update && brew upgrade && brew cleanup"
+  tag = ["brew"]
+
+[[snippets]]
+  description = "Brew: szukaj pakietu"
+  command = "brew search <query>"
+  tag = ["brew"]
+
+[[snippets]]
+  description = "Brew: info o pakiecie"
+  command = "brew info <package>"
+  tag = ["brew"]
+
+[[snippets]]
+  description = "Brew: lista zainstalowanych"
+  command = "brew list --formula"
+  tag = ["brew"]
+
+[[snippets]]
+  description = "Brew: lista cask (aplikacje GUI)"
+  command = "brew list --cask"
+  tag = ["brew"]
+
+[[snippets]]
+  description = "Brew: odinstaluj pakiet"
+  command = "brew uninstall <package>"
+  tag = ["brew"]
+
+# ═══════════════════════════════════════════════════════════════
+# Szukanie (rg/fd)
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "rg: szukaj tekstu w plikach (z typem)"
+  command = "rg '<pattern>' --type <filetype>"
+  tag = ["search"]
+
+[[snippets]]
+  description = "rg: szukaj tekstu (case insensitive)"
+  command = "rg -i '<pattern>'"
+  tag = ["search"]
+
+[[snippets]]
+  description = "rg: szukaj w konkretnym katalogu"
+  command = "rg '<pattern>' <directory>"
+  tag = ["search"]
+
+[[snippets]]
+  description = "rg: tylko nazwy plików z wynikami"
+  command = "rg -l '<pattern>'"
+  tag = ["search"]
+
+[[snippets]]
+  description = "rg: zamień tekst we wszystkich plikach"
+  command = "rg '<old_text>' -l | xargs sed -i '' 's/<old_text>/<new_text>/g'"
+  tag = ["search"]
+
+[[snippets]]
+  description = "fd: szukaj pliku po nazwie"
+  command = "fd '<pattern>' --type f"
+  tag = ["search"]
+
+[[snippets]]
+  description = "fd: szukaj katalogu po nazwie"
+  command = "fd '<pattern>' --type d"
+  tag = ["search"]
+
+[[snippets]]
+  description = "fd: szukaj po rozszerzeniu"
+  command = "fd -e <extension>"
+  tag = ["search"]
+
+[[snippets]]
+  description = "Porównaj dwa pliki (difftastic)"
+  command = "difft <file1> <file2>"
+  tag = ["search"]
+
+# ═══════════════════════════════════════════════════════════════
+# Procesy & System
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "Procesy: top 10 po CPU"
+  command = "ps aux --sort=-%cpu | head -11"
+  tag = ["process"]
+
+[[snippets]]
+  description = "Procesy: top 10 po pamięci"
+  command = "ps aux --sort=-%mem | head -11"
+  tag = ["process"]
+
+[[snippets]]
+  description = "Procesy: szukaj po nazwie"
+  command = "ps aux | grep -i <name>"
+  tag = ["process"]
+
+[[snippets]]
+  description = "Procesy: drzewo procesów"
+  command = "pstree -p | head -50"
+  tag = ["process"]
+
+[[snippets]]
+  description = "Procesy: co trzyma port"
+  command = "lsof -i :<port>"
+  tag = ["process"]
+
+[[snippets]]
+  description = "Procesy: otwarte pliki przez proces"
+  command = "lsof -p <pid>"
+  tag = ["process"]
+
+[[snippets]]
+  description = "Procesy: zabij po porcie"
+  command = "kill -9 $(lsof -t -i:<port>)"
+  tag = ["process"]
+
+[[snippets]]
+  description = "Procesy: monitoruj w real-time"
+  command = "watch -n 1 'ps aux | grep <name>'"
+  tag = ["process"]
+
+# ═══════════════════════════════════════════════════════════════
+# Encoding / Base64 / Hash
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "Base64: zakoduj tekst"
+  command = "echo -n '<text>' | base64"
+  tag = ["encoding"]
+
+[[snippets]]
+  description = "Base64: odkoduj"
+  command = "echo '<encoded>' | base64 -d"
+  tag = ["encoding"]
+
+[[snippets]]
+  description = "Base64: zakoduj plik"
+  command = "base64 -i <file>"
+  tag = ["encoding"]
+
+[[snippets]]
+  description = "URL encode"
+  command = "python3 -c \"import urllib.parse; print(urllib.parse.quote('<text>'))\""
+  tag = ["encoding"]
+
+[[snippets]]
+  description = "URL decode"
+  command = "python3 -c \"import urllib.parse; print(urllib.parse.unquote('<text>'))\""
+  tag = ["encoding"]
+
+[[snippets]]
+  description = "MD5 hash pliku"
+  command = "md5 <file>"
+  tag = ["encoding"]
+
+[[snippets]]
+  description = "SHA256 hash pliku"
+  command = "shasum -a 256 <file>"
+  tag = ["encoding"]
+
+[[snippets]]
+  description = "Generuj losowe hasło (32 znaki)"
+  command = "openssl rand -base64 32"
+  tag = ["encoding"]
+
+[[snippets]]
+  description = "Generuj UUID"
+  command = "uuidgen | tr '[:upper:]' '[:lower:]'"
+  tag = ["encoding"]
+
+# ═══════════════════════════════════════════════════════════════
+# Date & Time
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "Data: ISO 8601 (UTC)"
+  command = "date -u +%Y-%m-%dT%H:%M:%SZ"
+  tag = ["date"]
+
+[[snippets]]
+  description = "Data: timestamp Unix (epoch)"
+  command = "date +%s"
+  tag = ["date"]
+
+[[snippets]]
+  description = "Data: z timestamp na czytelną"
+  command = "date -r <timestamp>"
+  tag = ["date"]
+
+[[snippets]]
+  description = "Data: ile czasu temu (human)"
+  command = "echo $(( ($(date +%s) - <timestamp>) / 86400 )) dni temu"
+  tag = ["date"]
+
+[[snippets]]
+  description = "Data: ostatnia modyfikacja pliku"
+  command = "stat -f '%Sm' -t '%Y-%m-%d %H:%M' <file>"
+  tag = ["date"]
+
+# ═══════════════════════════════════════════════════════════════
+# Xargs & Pipes
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "Xargs: równoległe wykonanie (4 procesy)"
+  command = "cat <list> | xargs -P 4 -I {} <command> {}"
+  tag = ["xargs"]
+
+[[snippets]]
+  description = "Xargs: usuń znalezione pliki"
+  command = "fd -e <ext> | xargs rm"
+  tag = ["xargs"]
+
+[[snippets]]
+  description = "Xargs: grep w znalezionych plikach"
+  command = "fd -e <ext> | xargs grep '<pattern>'"
+  tag = ["xargs"]
+
+[[snippets]]
+  description = "Pipe: sortuj i policz duplikaty"
+  command = "<command> | sort | uniq -c | sort -rn | head -20"
+  tag = ["xargs"]
+
+[[snippets]]
+  description = "Pipe: CSV → kolumna (awk)"
+  command = "cat <file.csv> | awk -F',' '{print $<n>}'"
+  tag = ["xargs"]
+
+# ═══════════════════════════════════════════════════════════════
+# Regex (wzorce)
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "Regex: email"
+  command = "grep -oE '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}' <file>"
+  tag = ["regex"]
+
+[[snippets]]
+  description = "Regex: adres IP"
+  command = "grep -oE '([0-9]{1,3}\\.){3}[0-9]{1,3}' <file>"
+  tag = ["regex"]
+
+[[snippets]]
+  description = "Regex: URL (http/https)"
+  command = "grep -oE 'https?://[^ \"]+' <file>"
+  tag = ["regex"]
+
+[[snippets]]
+  description = "Regex: numery telefonów PL"
+  command = "grep -oE '(\\+48)?[- ]?[0-9]{3}[- ]?[0-9]{3}[- ]?[0-9]{3}' <file>"
+  tag = ["regex"]
+
+[[snippets]]
+  description = "Regex: polskie znaki w pliku"
+  command = "grep -P '[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]' <file>"
+  tag = ["regex"]
+
+# ═══════════════════════════════════════════════════════════════
+# Sed & Awk (zaawansowane)
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "Sed: zamień we wszystkich plikach rekurencyjnie"
+  command = "fd -e <ext> -x sed -i '' 's/<old>/<new>/g'"
+  tag = ["sed"]
+
+[[snippets]]
+  description = "Sed: usuń puste linie"
+  command = "sed '/^$/d' <file>"
+  tag = ["sed"]
+
+[[snippets]]
+  description = "Sed: wydrukuj linie N-M"
+  command = "sed -n '<n>,<m>p' <file>"
+  tag = ["sed"]
+
+[[snippets]]
+  description = "Sed: dodaj prefix do każdej linii"
+  command = "sed 's/^/<prefix>/' <file>"
+  tag = ["sed"]
+
+[[snippets]]
+  description = "Awk: sumuj kolumnę"
+  command = "awk '{sum += $<n>} END {print sum}' <file>"
+  tag = ["sed"]
+
+[[snippets]]
+  description = "Awk: wydrukuj unikalne wartości kolumny"
+  command = "awk -F'<sep>' '{print $<n>}' <file> | sort -u"
+  tag = ["sed"]
+
+# ═══════════════════════════════════════════════════════════════
+# Cron & Scheduled
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "Cron: lista zaplanowanych zadań"
+  command = "crontab -l"
+  tag = ["cron"]
+
+[[snippets]]
+  description = "Cron: edytuj crontab"
+  command = "crontab -e"
+  tag = ["cron"]
+
+[[snippets]]
+  description = "Cron: co minutę"
+  command = "# * * * * * /path/to/command"
+  tag = ["cron"]
+
+[[snippets]]
+  description = "Cron: codziennie o 3:00"
+  command = "# 0 3 * * * /path/to/command"
+  tag = ["cron"]
+
+[[snippets]]
+  description = "Cron: co poniedziałek o 8:00"
+  command = "# 0 8 * * 1 /path/to/command"
+  tag = ["cron"]
+
+# ═══════════════════════════════════════════════════════════════
+# Permissions & Users
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "Chmod: tylko owner read/write"
+  command = "chmod 600 <file>"
+  tag = ["permissions"]
+
+[[snippets]]
+  description = "Chmod: executable dla ownera"
+  command = "chmod u+x <file>"
+  tag = ["permissions"]
+
+[[snippets]]
+  description = "Chmod: rekurencyjnie 755 katalogi, 644 pliki"
+  command = "find <dir> -type d -exec chmod 755 {} + && find <dir> -type f -exec chmod 644 {} +"
+  tag = ["permissions"]
+
+[[snippets]]
+  description = "Chown: zmień ownera rekurencyjnie"
+  command = "chown -R <user>:<group> <dir>"
+  tag = ["permissions"]
+
+# ═══════════════════════════════════════════════════════════════
+# Claude / AI
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "Claude: nowa sesja"
+  command = "claude"
+  tag = ["claude"]
+
+[[snippets]]
+  description = "Claude: kontynuuj ostatnią sesję"
+  command = "claude --continue"
+  tag = ["claude"]
+
+[[snippets]]
+  description = "Claude: z konkretnym modelem"
+  command = "claude --model <model>"
+  tag = ["claude"]
+
+[[snippets]]
+  description = "Claude: pipe (bez interakcji)"
+  command = "echo '<prompt>' | claude --print"
+  tag = ["claude"]
+
+[[snippets]]
+  description = "Claude: wyjaśnij plik"
+  command = "cat <file> | claude --print 'wyjaśnij ten kod'"
+  tag = ["claude"]
+
+# ═══════════════════════════════════════════════════════════════
+# ZSH & CLI Tools
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "ZSH: lista aliasów"
+  command = "alias | sort"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "ZSH: historia (ostatnie 50)"
+  command = "history -50"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "ZSH: szukaj w historii"
+  command = "history | grep '<pattern>'"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "ZSH: powtórz ostatnią komendę z sudo"
+  command = "sudo !!"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "ZSH: glob - pliki zmienione dziś"
+  command = "ls -la *(.m0)"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "ZSH: glob - tylko katalogi"
+  command = "ls -d *(/)"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "ZSH: glob - pliki >10MB"
+  command = "ls -lh *(Lm+10)"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "ZSH: which + type komendy"
+  command = "type <command> && which <command>"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "ZSH: przeładuj konfigurację"
+  command = "source ~/.zshrc"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "ZSH: wyświetl PATH (czytelnie)"
+  command = "echo $PATH | tr ':' '\\n' | nl"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "Atuin: szukaj komendy"
+  command = "atuin search <query>"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "Atuin: statystyki historii"
+  command = "atuin stats"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "Atuin: importuj historię z zsh"
+  command = "atuin import zsh"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "bat: podgląd z kolorowaniem"
+  command = "bat <file>"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "bat: porównaj pliki (diff)"
+  command = "bat --diff <file1> <file2>"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "bat: pokaż tylko linie N-M"
+  command = "bat --line-range <n>:<m> <file>"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "eza: drzewo katalogów (2 poziomy)"
+  command = "eza --tree --level=2 --icons"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "eza: lista z git status"
+  command = "eza -la --git --icons"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "eza: posortowane po rozmiarze"
+  command = "eza -la --sort=size --reverse --icons"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "fd: szukaj i wykonaj na każdym"
+  command = "fd -e <ext> -x <command> {}"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "fd: szukaj ukryte pliki"
+  command = "fd -H '<pattern>'"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "fd: szukaj z exclude"
+  command = "fd '<pattern>' -E node_modules -E .git"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "rg: szukaj z kontekstem (±3 linie)"
+  command = "rg -C 3 '<pattern>' <path>"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "rg: szukaj multiline"
+  command = "rg -U '<pattern>.*\\n.*<pattern2>' <path>"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "rg: zamień tekst (podgląd)"
+  command = "rg '<old>' --replace '<new>' <path>"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "rg: statystyki (ile wyników per plik)"
+  command = "rg -c '<pattern>' <path> | sort -t: -k2 -rn"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "fzf: szukaj pliku i otwórz w nvim"
+  command = "nvim $(fzf --preview 'bat --color=always {}')"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "fzf: szukaj w historii"
+  command = "history | fzf --tac"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "fzf: kill proces interaktywnie"
+  command = "ps aux | fzf | awk '{print $2}' | xargs kill"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "fzf: git checkout branch"
+  command = "git branch -a | fzf | xargs git checkout"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "tldr: szybka pomoc komendy"
+  command = "tldr <command>"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "Zoxide: lista najczęstszych katalogów"
+  command = "zoxide query -ls"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "Zoxide: interaktywny wybór katalogu"
+  command = "zi"
+  tag = ["zsh"]
+
+[[snippets]]
+  description = "direnv: zezwól na .envrc w katalogu"
+  command = "direnv allow"
+  tag = ["zsh"]
+
+# ═══════════════════════════════════════════════════════════════
+# Network (zaawansowane)
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "Net: skanuj porty hosta (nmap)"
+  command = "nmap -sT <host>"
+  tag = ["network"]
+
+[[snippets]]
+  description = "Net: skan portów z detekcją usług"
+  command = "nmap -sV -sC <host>"
+  tag = ["network"]
+
+[[snippets]]
+  description = "Net: skan szybki (top 100 portów)"
+  command = "nmap --top-ports 100 <host>"
+  tag = ["network"]
+
+[[snippets]]
+  description = "Net: DNS lookup (dig)"
+  command = "dig <domain>"
+  tag = ["network"]
+
+[[snippets]]
+  description = "Net: DNS rekordy MX"
+  command = "dig MX <domain> +short"
+  tag = ["network"]
+
+[[snippets]]
+  description = "Net: DNS rekordy TXT"
+  command = "dig TXT <domain> +short"
+  tag = ["network"]
+
+[[snippets]]
+  description = "Net: reverse DNS"
+  command = "dig -x <ip>"
+  tag = ["network"]
+
+[[snippets]]
+  description = "Net: DNS propagacja (wszystkie NS)"
+  command = "dig <domain> @8.8.8.8 +short && dig <domain> @1.1.1.1 +short"
+  tag = ["network"]
+
+[[snippets]]
+  description = "Net: traceroute"
+  command = "traceroute <host>"
+  tag = ["network"]
+
+[[snippets]]
+  description = "Net: mtr (traceroute + ping ciągły)"
+  command = "mtr <host>"
+  tag = ["network"]
+
+[[snippets]]
+  description = "Net: ping z limitem"
+  command = "ping -c 5 <host>"
+  tag = ["network"]
+
+[[snippets]]
+  description = "Net: test prędkości (speedtest)"
+  command = "networkQuality"
+  tag = ["network"]
+
+[[snippets]]
+  description = "Net: WHOIS domeny"
+  command = "whois <domain>"
+  tag = ["network"]
+
+[[snippets]]
+  description = "Net: sprawdź certyfikat SSL"
+  command = "openssl s_client -connect <host>:443 -servername <host> 2>/dev/null | openssl x509 -noout -dates -subject"
+  tag = ["network"]
+
+[[snippets]]
+  description = "Net: pobierz certyfikat SSL"
+  command = "openssl s_client -connect <host>:443 -servername <host> 2>/dev/null | openssl x509 -text"
+  tag = ["network"]
+
+[[snippets]]
+  description = "Net: netcat - test portu"
+  command = "nc -zv <host> <port>"
+  tag = ["network"]
+
+[[snippets]]
+  description = "Net: netcat - nasłuchuj na porcie"
+  command = "nc -l <port>"
+  tag = ["network"]
+
+[[snippets]]
+  description = "Net: skan zakresu portów"
+  command = "nc -zv <host> <port_start>-<port_end> 2>&1 | grep succeeded"
+  tag = ["network"]
+
+[[snippets]]
+  description = "Net: tcpdump na interfejsie"
+  command = "sudo tcpdump -i <interface> -n port <port>"
+  tag = ["network"]
+
+[[snippets]]
+  description = "Net: tcpdump zapisz do pliku pcap"
+  command = "sudo tcpdump -i <interface> -w capture.pcap"
+  tag = ["network"]
+
+[[snippets]]
+  description = "Net: pokaż tablicę ARP"
+  command = "arp -a"
+  tag = ["network"]
+
+[[snippets]]
+  description = "Net: aktywne połączenia TCP"
+  command = "netstat -an | grep ESTABLISHED | sort"
+  tag = ["network"]
+
+[[snippets]]
+  description = "Net: statystyki interfejsów"
+  command = "netstat -ib"
+  tag = ["network"]
+
+[[snippets]]
+  description = "SSH: tunel SOCKS (proxy)"
+  command = "ssh -D <local_port> <user>@<host>"
+  tag = ["network", "ssh"]
+
+[[snippets]]
+  description = "SSH: remote forward"
+  command = "ssh -R <remote_port>:localhost:<local_port> <user>@<host>"
+  tag = ["network", "ssh"]
+
+[[snippets]]
+  description = "SSH: multipleksowane połączenie"
+  command = "ssh -o ControlMaster=auto -o ControlPath=/tmp/ssh-%r@%h:%p -o ControlPersist=600 <user>@<host>"
+  tag = ["network", "ssh"]
+
+[[snippets]]
+  description = "Curl: mierz czas odpowiedzi"
+  command = "curl -o /dev/null -s -w 'DNS: %{time_namelookup}s\\nConnect: %{time_connect}s\\nTTFB: %{time_starttransfer}s\\nTotal: %{time_total}s\\n' <url>"
+  tag = ["network", "http"]
+
+[[snippets]]
+  description = "Curl: testuj SSL/TLS wersje"
+  command = "curl -v --tlsv1.2 <url> 2>&1 | grep 'SSL connection'"
+  tag = ["network", "http"]
+
+[[snippets]]
+  description = "Wget: mirror strony (offline)"
+  command = "wget --mirror --convert-links --page-requisites --no-parent <url>"
+  tag = ["network"]
+
+[[snippets]]
+  description = "Wget: pobierz z resume"
+  command = "wget -c <url>"
+  tag = ["network"]
+
+# ═══════════════════════════════════════════════════════════════
+# MySQL (zaawansowane)
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "MySQL: slow queries (top 10)"
+  command = "mysql -u <user> -p -e \"SELECT * FROM mysql.slow_log ORDER BY query_time DESC LIMIT 10;\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: pokaż status InnoDB"
+  command = "mysql -u <user> -p -e 'SHOW ENGINE INNODB STATUS\\G'"
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: zmienne globalnie (szukaj)"
+  command = "mysql -u <user> -p -e \"SHOW GLOBAL VARIABLES LIKE '%<pattern>%';\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: status globalny (szukaj)"
+  command = "mysql -u <user> -p -e \"SHOW GLOBAL STATUS LIKE '%<pattern>%';\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: tabele bez indeksów"
+  command = "mysql -u <user> -p <db> -e \"SELECT t.TABLE_NAME FROM information_schema.TABLES t LEFT JOIN information_schema.STATISTICS s ON t.TABLE_NAME=s.TABLE_NAME AND t.TABLE_SCHEMA=s.TABLE_SCHEMA WHERE t.TABLE_SCHEMA='<db>' AND s.TABLE_NAME IS NULL;\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: kolumny tabeli z typami"
+  command = "mysql -u <user> -p <db> -e \"SELECT COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE, COLUMN_DEFAULT FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='<db>' AND TABLE_NAME='<table>' ORDER BY ORDINAL_POSITION;\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: foreign keys tabeli"
+  command = "mysql -u <user> -p <db> -e \"SELECT CONSTRAINT_NAME, COLUMN_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA='<db>' AND TABLE_NAME='<table>' AND REFERENCED_TABLE_NAME IS NOT NULL;\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: duplikaty w kolumnie"
+  command = "mysql -u <user> -p <db> -e \"SELECT <column>, COUNT(*) c FROM <table> GROUP BY <column> HAVING c > 1 ORDER BY c DESC LIMIT 20;\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: export do CSV"
+  command = "mysql -u <user> -p <db> -e \"SELECT * FROM <table>\" | tr '\\t' ',' > <output.csv>"
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: import z CSV"
+  command = "mysql -u <user> -p <db> -e \"LOAD DATA LOCAL INFILE '<file.csv>' INTO TABLE <table> FIELDS TERMINATED BY ',' ENCLOSED BY '\\\"' LINES TERMINATED BY '\\n' IGNORE 1 ROWS;\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: porównaj strukturę dwóch tabel"
+  command = "diff <(mysql -u <user> -p -e 'SHOW CREATE TABLE <db1>.<table>\\G') <(mysql -u <user> -p -e 'SHOW CREATE TABLE <db2>.<table>\\G')"
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: wyczyść tabelę (szybki truncate)"
+  command = "mysql -u <user> -p <db> -e 'TRUNCATE TABLE <table>;'"
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: liczba wierszy per tabela"
+  command = "mysql -u <user> -p <db> -e \"SELECT TABLE_NAME, TABLE_ROWS FROM information_schema.TABLES WHERE TABLE_SCHEMA='<db>' ORDER BY TABLE_ROWS DESC;\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: ostatnio zmodyfikowane tabele"
+  command = "mysql -u <user> -p <db> -e \"SELECT TABLE_NAME, UPDATE_TIME FROM information_schema.TABLES WHERE TABLE_SCHEMA='<db>' AND UPDATE_TIME IS NOT NULL ORDER BY UPDATE_TIME DESC LIMIT 20;\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: utwórz użytkownika z uprawnieniami"
+  command = "mysql -u root -p -e \"CREATE USER '<user>'@'%' IDENTIFIED BY '<password>'; GRANT ALL PRIVILEGES ON <db>.* TO '<user>'@'%'; FLUSH PRIVILEGES;\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: lista użytkowników z hostami"
+  command = "mysql -u <user> -p -e 'SELECT User, Host FROM mysql.user ORDER BY User;'"
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: backup z kompresją"
+  command = "mysqldump -u <user> -p <db> | gzip > <db>_$(date +%Y%m%d_%H%M).sql.gz"
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: restore z kompresji"
+  command = "gunzip < <backup.sql.gz> | mysql -u <user> -p <db>"
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: dump struktury (bez danych)"
+  command = "mysqldump -u <user> -p --no-data <db> > schema.sql"
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: dump tylko dane (bez struktury)"
+  command = "mysqldump -u <user> -p --no-create-info <db> <table> > data.sql"
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: EXPLAIN query (plan wykonania)"
+  command = "mysql -u <user> -p <db> -e 'EXPLAIN <query>;'"
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: pokaż pełne processy (running)"
+  command = "mysql -u <user> -p -e 'SHOW FULL PROCESSLIST;'"
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: JSON extract (5.7+)"
+  command = "mysql -u <user> -p <db> -e \"SELECT JSON_EXTRACT(<column>, '$.<key>') FROM <table> LIMIT 10;\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: szukaj wartości we wszystkich tabelach"
+  command = "mysql -u <user> -p <db> -e \"SELECT TABLE_NAME, COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='<db>' AND DATA_TYPE IN ('varchar','text','char') AND COLUMN_NAME LIKE '%<pattern>%';\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL NovaMRP: połącz lokalnie"
+  command = "mysql -u DB_USER -pDB_PASSWORD -h 127.0.0.1 intranet2"
+  tag = ["mysql", "novamrp"]
+
+[[snippets]]
+  description = "MySQL NovaMRP: backup intranet2"
+  command = "mysqldump -u DB_USER -pDB_PASSWORD -h 127.0.0.1 intranet2 | gzip > intranet2_$(date +%Y%m%d_%H%M).sql.gz"
+  tag = ["mysql", "novamrp"]
+
+# ═══════════════════════════════════════════════════════════════
+# Grep / Ripgrep (zaawansowane)
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "grep: szukaj rekurencyjnie (klasyczny)"
+  command = "grep -rn '<pattern>' <path>"
+  tag = ["grep"]
+
+[[snippets]]
+  description = "grep: szukaj tylko w plikach danego typu"
+  command = "grep -rn --include='*.<ext>' '<pattern>' ."
+  tag = ["grep"]
+
+[[snippets]]
+  description = "grep: wyklucz katalogi (node_modules, .git)"
+  command = "grep -rn --exclude-dir={node_modules,.git,dist,__pycache__} '<pattern>' ."
+  tag = ["grep"]
+
+[[snippets]]
+  description = "grep: pokaż tylko nazwy plików"
+  command = "grep -rl '<pattern>' <path>"
+  tag = ["grep"]
+
+[[snippets]]
+  description = "grep: zlicz wystąpienia per plik"
+  command = "grep -rc '<pattern>' <path> | grep -v ':0$' | sort -t: -k2 -rn"
+  tag = ["grep"]
+
+[[snippets]]
+  description = "grep: szukaj wielu wzorców (OR)"
+  command = "grep -rn -e '<pattern1>' -e '<pattern2>' <path>"
+  tag = ["grep"]
+
+[[snippets]]
+  description = "grep: pokaż linie NIE pasujące"
+  command = "grep -rn -v '<pattern>' <file>"
+  tag = ["grep"]
+
+[[snippets]]
+  description = "grep: szukaj dokładnego słowa (word boundary)"
+  command = "grep -rnw '<word>' <path>"
+  tag = ["grep"]
+
+[[snippets]]
+  description = "grep: kontekst ±N linii"
+  command = "grep -rn -C <N> '<pattern>' <path>"
+  tag = ["grep"]
+
+[[snippets]]
+  description = "grep: szukaj z regex (extended)"
+  command = "grep -rn -E '<regex_pattern>' <path>"
+  tag = ["grep"]
+
+[[snippets]]
+  description = "grep: szukaj w plikach zmienionych w git"
+  command = "git diff --name-only | xargs grep -n '<pattern>'"
+  tag = ["grep", "git"]
+
+[[snippets]]
+  description = "grep: szukaj TODO/FIXME/HACK w projekcie"
+  command = "grep -rn -E '(TODO|FIXME|HACK|XXX):?' --include='*.{py,ts,js,tsx,jsx}' ."
+  tag = ["grep"]
+
+[[snippets]]
+  description = "rg: szukaj z typem pliku"
+  command = "rg -t <type> '<pattern>'"
+  tag = ["grep", "rg"]
+
+[[snippets]]
+  description = "rg: lista wspieranych typów plików"
+  command = "rg --type-list"
+  tag = ["grep", "rg"]
+
+[[snippets]]
+  description = "rg: szukaj z regex + kontekst"
+  command = "rg -e '<regex>' -C 3 <path>"
+  tag = ["grep", "rg"]
+
+[[snippets]]
+  description = "rg: szukaj w ukrytych plikach"
+  command = "rg --hidden '<pattern>'"
+  tag = ["grep", "rg"]
+
+[[snippets]]
+  description = "rg: szukaj plików wg wzorca nazwy"
+  command = "rg --files -g '<glob_pattern>'"
+  tag = ["grep", "rg"]
+
+[[snippets]]
+  description = "rg: JSON output (do jq)"
+  command = "rg --json '<pattern>' | jq '.'"
+  tag = ["grep", "rg"]
+
+[[snippets]]
+  description = "rg: szukaj definicji funkcji Python"
+  command = "rg 'def <function_name>' -t py"
+  tag = ["grep", "rg", "python"]
+
+[[snippets]]
+  description = "rg: szukaj importów modułu"
+  command = "rg '(import|from).*<module>' -t py"
+  tag = ["grep", "rg", "python"]
+
+[[snippets]]
+  description = "rg: szukaj i zamień (sed pipe)"
+  command = "rg -l '<old>' | xargs sed -i '' 's/<old>/<new>/g'"
+  tag = ["grep", "rg"]
+
+[[snippets]]
+  description = "rg: szukaj IP adresów"
+  command = "rg -oP '\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}' <path>"
+  tag = ["grep", "rg"]
+
+[[snippets]]
+  description = "rg: szukaj email adresów"
+  command = "rg -oP '[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}' <path>"
+  tag = ["grep", "rg"]
+
+[[snippets]]
+  description = "rg: szukaj URL-i"
+  command = "rg -oP 'https?://[\\S]+' <path>"
+  tag = ["grep", "rg"]
+
+# ═══════════════════════════════════════════════════════════════
+# Git (zaawansowane)
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "Git: interaktywny rebase (ostatnie N commitów)"
+  command = "git rebase -i HEAD~<N>"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: squash ostatnich N commitów"
+  command = "git reset --soft HEAD~<N> && git commit"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: bisect (szukanie buga)"
+  command = "git bisect start && git bisect bad && git bisect good <commit>"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: log z diff stat"
+  command = "git log --stat --oneline -<N>"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: log zmian w konkretnym pliku"
+  command = "git log --follow -p -- <file>"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: log zmian w funkcji"
+  command = "git log -L ':<function_name>:<file>'"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: pokaż commity autora"
+  command = "git log --author='<name>' --oneline -20"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: commity z ostatniego tygodnia"
+  command = "git log --since='1 week ago' --oneline --all"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: commity między datami"
+  command = "git log --after='<YYYY-MM-DD>' --before='<YYYY-MM-DD>' --oneline"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: diff staged (co pójdzie w commit)"
+  command = "git diff --cached"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: diff słów (nie linii)"
+  command = "git diff --word-diff"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: diff statystyka (ile linii zmienione)"
+  command = "git diff --stat"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: kto zmienił konkretną linię"
+  command = "git blame -L <start>,<end> <file>"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: pokaż commit (full diff)"
+  command = "git show <commit>"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: lista tagów z datami"
+  command = "git tag -l --sort=-creatordate --format='%(creatordate:short) %(refname:short)'"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: utwórz tag z opisem"
+  command = "git tag -a <tag_name> -m '<message>'"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: wypchnij tagi"
+  command = "git push --tags"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: stash tylko unstaged"
+  command = "git stash --keep-index"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: stash z untracked files"
+  command = "git stash -u"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: lista stash z diff"
+  command = "git stash list && git stash show -p stash@{0}"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: przywróć plik z innego brancha"
+  command = "git checkout <branch> -- <file>"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: przywróć plik z konkretnego commita"
+  command = "git checkout <commit> -- <file>"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: worktree (równoległy branch)"
+  command = "git worktree add ../<dir_name> <branch>"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: lista worktrees"
+  command = "git worktree list"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: clean (usuń untracked files)"
+  command = "git clean -fd --dry-run"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: remote prune (wyczyść stale remote branche)"
+  command = "git remote prune origin"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: revert commit (nowy commit cofający)"
+  command = "git revert <commit>"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: patch z commita"
+  command = "git format-patch -1 <commit>"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: zastosuj patch"
+  command = "git am < <patch_file>"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: shortlog (podsumowanie autorów)"
+  command = "git shortlog -sn --all"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: szukaj commita po treści zmiany"
+  command = "git log -S '<string>' --oneline"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: szukaj commita po regex w diff"
+  command = "git log -G '<regex>' --oneline"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: pokaż branche zawierające commit"
+  command = "git branch --contains <commit>"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: merge bez fast-forward"
+  command = "git merge --no-ff <branch>"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: abort merge/rebase"
+  command = "git merge --abort"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: continue rebase po konflikcie"
+  command = "git rebase --continue"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: config lista (global)"
+  command = "git config --global --list"
+  tag = ["git"]
+
+[[snippets]]
+  description = "Git: aliasy zdefiniowane"
+  command = "git config --get-regexp alias"
+  tag = ["git"]
+
+# ═══════════════════════════════════════════════════════════════
+# MySQL (zaawansowane)
+# ═══════════════════════════════════════════════════════════════
+
+[[snippets]]
+  description = "MySQL: slow query log (włącz tymczasowo)"
+  command = "mysql -e \"SET GLOBAL slow_query_log = 'ON'; SET GLOBAL long_query_time = 1;\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: pokaż slow queries"
+  command = "mysql -e \"SELECT * FROM mysql.slow_log ORDER BY start_time DESC LIMIT 20;\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: EXPLAIN ANALYZE query"
+  command = "mysql -e \"EXPLAIN ANALYZE <query>;\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: pokaż pełną listę procesów"
+  command = "mysql -e \"SHOW FULL PROCESSLIST;\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: status InnoDB (locks, transactions)"
+  command = "mysql -e \"SHOW ENGINE INNODB STATUS\\G\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: pokaż zmienne (filtruj)"
+  command = "mysql -e \"SHOW VARIABLES LIKE '%<pattern>%';\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: pokaż status (filtruj)"
+  command = "mysql -e \"SHOW STATUS LIKE '%<pattern>%';\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: tabele bez PRIMARY KEY"
+  command = "mysql -e \"SELECT t.TABLE_SCHEMA, t.TABLE_NAME FROM information_schema.TABLES t LEFT JOIN information_schema.TABLE_CONSTRAINTS c ON t.TABLE_SCHEMA=c.TABLE_SCHEMA AND t.TABLE_NAME=c.TABLE_NAME AND c.CONSTRAINT_TYPE='PRIMARY KEY' WHERE c.CONSTRAINT_NAME IS NULL AND t.TABLE_SCHEMA NOT IN ('mysql','information_schema','performance_schema','sys');\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: kolumny tabeli z typami"
+  command = "mysql -e \"SELECT COLUMN_NAME, COLUMN_TYPE, IS_NULLABLE, COLUMN_KEY, COLUMN_DEFAULT FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='<db>' AND TABLE_NAME='<table>';\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: foreign keys tabeli"
+  command = "mysql -e \"SELECT CONSTRAINT_NAME, COLUMN_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA='<db>' AND TABLE_NAME='<table>' AND REFERENCED_TABLE_NAME IS NOT NULL;\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: duplikaty w kolumnie"
+  command = "mysql <db> -e \"SELECT <column>, COUNT(*) c FROM <table> GROUP BY <column> HAVING c > 1 ORDER BY c DESC;\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: export do CSV"
+  command = "mysql <db> -e \"SELECT * FROM <table>\" -B | sed 's/\\t/,/g' > <output>.csv"
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: import CSV do tabeli"
+  command = "mysql <db> -e \"LOAD DATA LOCAL INFILE '<file>.csv' INTO TABLE <table> FIELDS TERMINATED BY ',' ENCLOSED BY '\\\"' LINES TERMINATED BY '\\n' IGNORE 1 ROWS;\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: utwórz użytkownika"
+  command = "mysql -e \"CREATE USER '<user>'@'%' IDENTIFIED BY '<password>'; GRANT ALL ON <db>.* TO '<user>'@'%'; FLUSH PRIVILEGES;\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: dump tylko struktury (bez danych)"
+  command = "mysqldump --no-data <db> > schema_$(date +%Y%m%d).sql"
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: dump konkretnych tabel"
+  command = "mysqldump <db> <table1> <table2> > tables_dump.sql"
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: dump z WHERE (częściowy)"
+  command = "mysqldump <db> <table> --where='<condition>' > partial_dump.sql"
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: porównaj struktury dwóch tabel"
+  command = "diff <(mysql -e \"SHOW CREATE TABLE <db1>.<table>\\G\") <(mysql -e \"SHOW CREATE TABLE <db2>.<table>\\G\")"
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: aktualna wielkość bazy"
+  command = "mysql -e \"SELECT table_schema AS 'Database', ROUND(SUM(data_length + index_length) / 1024 / 1024, 2) AS 'Size (MB)' FROM information_schema.tables GROUP BY table_schema ORDER BY SUM(data_length + index_length) DESC;\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: ostatnio zmodyfikowane tabele"
+  command = "mysql -e \"SELECT TABLE_NAME, UPDATE_TIME FROM information_schema.TABLES WHERE TABLE_SCHEMA='<db>' AND UPDATE_TIME IS NOT NULL ORDER BY UPDATE_TIME DESC LIMIT 20;\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: aktywne locki"
+  command = "mysql -e \"SELECT * FROM performance_schema.data_locks LIMIT 20;\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: oczekujące locki (kto blokuje kogo)"
+  command = "mysql -e \"SELECT r.trx_id waiting_trx, r.trx_mysql_thread_id waiting_thread, b.trx_id blocking_trx, b.trx_mysql_thread_id blocking_thread FROM information_schema.innodb_lock_waits w JOIN information_schema.innodb_trx b ON b.trx_id=w.blocking_trx_id JOIN information_schema.innodb_trx r ON r.trx_id=w.requesting_trx_id;\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: JSON extract z kolumny"
+  command = "mysql <db> -e \"SELECT JSON_EXTRACT(<column>, '$.<key>') FROM <table> LIMIT 10;\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: dodaj indeks"
+  command = "mysql <db> -e \"CREATE INDEX idx_<name> ON <table>(<column>);\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: nieużywane indeksy"
+  command = "mysql -e \"SELECT s.TABLE_SCHEMA, s.TABLE_NAME, s.INDEX_NAME FROM information_schema.STATISTICS s LEFT JOIN performance_schema.table_io_waits_summary_by_index_usage u ON s.TABLE_SCHEMA=u.OBJECT_SCHEMA AND s.TABLE_NAME=u.OBJECT_NAME AND s.INDEX_NAME=u.INDEX_NAME WHERE u.INDEX_NAME IS NULL AND s.TABLE_SCHEMA NOT IN ('mysql','sys','performance_schema');\""
+  tag = ["mysql"]
+
+[[snippets]]
+  description = "MySQL: rozmiar indeksów tabeli"
+  command = "mysql -e \"SELECT TABLE_NAME, INDEX_NAME, ROUND(stat_value * @@innodb_page_size / 1024 / 1024, 2) AS 'Size (MB)' FROM mysql.innodb_index_stats WHERE database_name='<db>' AND stat_name='size' ORDER BY stat_value DESC;\""
+  tag = ["mysql"]

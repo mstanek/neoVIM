@@ -1,0 +1,1 @@
+launch --type=os-window zsh -l -c 'tmux attach 2>/dev/null || tmux new-session'

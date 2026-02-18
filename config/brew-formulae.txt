@@ -15,3 +15,9 @@ luarocks
 btop
 lazydocker
 tree-sitter-cli
+zoxide
+starship
+sevenzip
+atuin
+pet
+bat

@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Returns path to today's journal file (creates template if needed)
+
+pane_path=$(tmux display-message -p '#{pane_current_path}')
+git_root=$(cd "$pane_path" && git rev-parse --show-toplevel 2>/dev/null)
+
+if [[ -n "$git_root" ]]; then
+  project_key="${git_root//\//-}"
+  journal_dir="$HOME/.claude/projects/${project_key}/notes/journal"
+  project_name=$(basename "$git_root")
+else
+  journal_dir="$HOME/.claude/notes/journal"
+  project_name="general"
+fi
+
+mkdir -p "$journal_dir"
+
+today=$(date +%Y-%m-%d)
+day_name=$(date +%A)
+journal_file="$journal_dir/${today}.md"
+
+if [[ ! -f "$journal_file" ]]; then
+  cat > "$journal_file" << TEMPLATE
+# ${day_name}, ${today}
+
+## Co zrobilem
+
+-
+
+## Decyzje
+
+-
+
+## Blokery / Pytania
+
+-
+
+## Na jutro
+
+-
+TEMPLATE
+fi
+
+echo "$journal_file"

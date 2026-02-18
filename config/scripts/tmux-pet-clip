@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Copy snippet command to clipboard (raw, without parameter prompts)
+# fzf keys: Enter=copy, Ctrl-E=edit, Ctrl-A=add new
+
+SNIPPET_FILE="$HOME/.config/pet/snippet.toml"
+AWK_SCRIPT="$HOME/.local/bin/pet-parse.awk"
+
+selected=$(awk -f "$AWK_SCRIPT" "$SNIPPET_FILE" | \
+  fzf --layout=reverse \
+      --border \
+      --height=90% \
+      --pointer='*' \
+      --cycle \
+      --ansi \
+      --prompt='Snippets (Enter=kopiuj): ' \
+      --header='Ctrl-E: edytuj | Ctrl-A: dodaj nowy' \
+      --preview='echo {2..}' \
+      --preview-window=down:3:wrap \
+      --bind="ctrl-e:execute(${EDITOR:-nvim} $SNIPPET_FILE)+abort" \
+      --bind="ctrl-a:execute(pet new)+abort")
+
+[[ -z "$selected" ]] && exit 0
+
+# Extract command: remove "[description]: " prefix
+cmd="${selected#*]: }"
+printf '%s' "$cmd" | pbcopy

@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+# Returns path to project-specific cheatsheet (creates template from project context)
+
+pane_path=$(tmux display-message -p '#{pane_current_path}')
+git_root=$(cd "$pane_path" && git rev-parse --show-toplevel 2>/dev/null)
+
+if [[ -n "$git_root" ]]; then
+  project_key="${git_root//\//-}"
+  notes_dir="$HOME/.claude/projects/${project_key}/notes"
+  project_name=$(basename "$git_root")
+else
+  notes_dir="$HOME/.claude/notes"
+  project_name="general"
+fi
+
+mkdir -p "$notes_dir"
+cheat_file="$notes_dir/cheatsheet.md"
+
+if [[ ! -f "$cheat_file" ]]; then
+  # Auto-detect project context for template
+  has_docker=false
+  has_makefile=false
+  has_npm=false
+
+  [[ -n "$git_root" && -f "$git_root/docker-compose.yml" ]] && has_docker=true
+  [[ -n "$git_root" && -d "$git_root/scripts/config/development" ]] && has_docker=true
+  [[ -n "$git_root" && -f "$git_root/backend/Makefile" ]] && has_makefile=true
+  [[ -n "$git_root" && -f "$git_root/web/package.json" ]] && has_npm=true
+
+  cat > "$cheat_file" << TEMPLATE
+# ${project_name} - Cheat Sheet
+
+## Docker
+\`\`\`bash
+# Start/stop
+cd scripts/config/development && docker-compose -f docker-compose.dev.yml up -d
+docker-compose -f docker-compose.dev.yml down
+
+# Logs
+docker logs -f novamrp-backend-dev
+docker logs -f novamrp-web-dev
+
+# Shell
+docker exec -it novamrp-backend-dev bash
+\`\`\`
+
+## Porty
+| Service | URL |
+|---------|-----|
+| Backend | http://localhost:8050 |
+| Web     | https://localhost:4000 |
+| Redis   | localhost:6379 |
+
+## API Testing
+\`\`\`bash
+# Login
+curl -X POST http://localhost:8050/api/auth/login \\
+  -H "Content-Type: application/json" \\
+  -d '{"username":"user@example.com","password":"YOUR_PASSWORD"}'
+\`\`\`
+
+## Backend (Make)
+\`\`\`bash
+cd backend
+make quality        # All checks
+make lint           # ruff
+make type-check     # mypy
+make security       # bandit
+make dead-code      # vulture
+\`\`\`
+
+## Frontend
+\`\`\`bash
+cd web
+npm run dev         # Dev server
+npm run build       # Build
+NODE_OPTIONS=--max-old-space-size=8192 npx vue-tsc --noEmit  # Type check (local!)
+\`\`\`
+
+## Git
+\`\`\`bash
+git log --oneline -20
+git diff --stat
+\`\`\`
+
+## Database
+\`\`\`bash
+mysql -u DB_USER -pDB_PASSWORD intranet2 -e "SHOW TABLES LIKE 'mrp%';"
+\`\`\`
+TEMPLATE
+fi
+
+echo "$cheat_file"

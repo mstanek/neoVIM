@@ -1,0 +1,221 @@
+# =============================================================================
+# Yazi Theme - Catppuccin Mocha (jak bat i Neovim)
+# =============================================================================
+
+[manager]
+cwd = { fg = "#89b4fa", bold = true }  # Blue
+
+# Podświetlenie aktualnego pliku
+hovered         = { fg = "#1e1e2e", bg = "#89b4fa", bold = true }
+preview_hovered = { underline = true }
+
+# Znajdowanie plików
+find_keyword  = { fg = "#f9e2af", bold = true, italic = true }  # Yellow
+find_position = { fg = "#f5c2e7", bg = "reset", bold = true }   # Pink
+
+# Oznaczenia
+marker_copied   = { fg = "#a6e3a1", bg = "#a6e3a1" }  # Green
+marker_cut      = { fg = "#f38ba8", bg = "#f38ba8" }  # Red
+marker_selected = { fg = "#89b4fa", bg = "#89b4fa" }  # Blue
+marker_marked   = { fg = "#f9e2af", bg = "#f9e2af" }  # Yellow
+
+# Tabs
+tab_active   = { fg = "#1e1e2e", bg = "#cdd6f4" }
+tab_inactive = { fg = "#cdd6f4", bg = "#45475a" }
+tab_width    = 1
+
+# Border
+border_symbol = "│"
+border_style  = { fg = "#6c7086" }
+
+# Separator/Highlights
+count_copied   = { fg = "#1e1e2e", bg = "#a6e3a1" }
+count_cut      = { fg = "#1e1e2e", bg = "#f38ba8" }
+count_selected = { fg = "#1e1e2e", bg = "#89b4fa" }
+
+[status]
+separator_open  = ""
+separator_close = ""
+separator_style = { fg = "#585b70", bg = "#313244" }
+
+# Tryb (Normal, Select, Unset) - wysokie kontrastowe kolory
+mode_normal = { fg = "#1e1e2e", bg = "#89dceb", bold = true }  # Sky (jaśniejszy)
+mode_select = { fg = "#1e1e2e", bg = "#a6e3a1", bold = true }  # Green
+mode_unset  = { fg = "#1e1e2e", bg = "#f38ba8", bold = true }  # Red
+
+# Info w statusie - jaśniejsze kolory dla czytelności
+progress_label  = { fg = "#cdd6f4", bold = true }
+progress_normal = { fg = "#89dceb", bg = "#313244" }  # Sky na ciemniejszym tle
+progress_error  = { fg = "#f38ba8", bg = "#313244" }
+
+# Permissions - jaśniejsze warianty
+permissions_t = { fg = "#89dceb" }  # Sky (jaśniejszy od blue)
+permissions_r = { fg = "#f9e2af" }  # Yellow
+permissions_w = { fg = "#f38ba8" }  # Red
+permissions_x = { fg = "#a6e3a1" }  # Green
+permissions_s = { fg = "#6c7086" }
+
+[input]
+border   = { fg = "#89b4fa" }
+title    = {}
+value    = {}
+selected = { reversed = true }
+
+[select]
+border   = { fg = "#89b4fa" }
+active   = { fg = "#f5c2e7" }
+inactive = {}
+
+[tasks]
+border  = { fg = "#89b4fa" }
+title   = {}
+hovered = { underline = true }
+
+[which]
+mask            = { bg = "#313244" }
+cand            = { fg = "#94e2d5" }  # Teal
+rest            = { fg = "#9399b2" }
+desc            = { fg = "#f5c2e7" }  # Pink
+separator       = "  "
+separator_style = { fg = "#585b70" }
+
+[help]
+on      = { fg = "#f5c2e7" }
+run     = { fg = "#94e2d5" }
+desc    = { fg = "#9399b2" }
+hovered = { bg = "#45475a", bold = true }
+footer  = { fg = "#45475a", bg = "#cdd6f4" }
+
+[filetype]
+rules = [
+    # Obrazy - Zielony
+    { mime = "image/*", fg = "#a6e3a1" },
+
+    # Wideo - Fioletowy
+    { mime = "video/*", fg = "#cba6f7" },
+    { mime = "audio/*", fg = "#cba6f7" },
+
+    # Archiwa - Czerwony
+    { mime = "application/zip", fg = "#f38ba8" },
+    { mime = "application/gzip", fg = "#f38ba8" },
+    { mime = "application/x-tar", fg = "#f38ba8" },
+    { mime = "application/x-bzip*", fg = "#f38ba8" },
+    { mime = "application/x-7z-compressed", fg = "#f38ba8" },
+    { mime = "application/x-rar", fg = "#f38ba8" },
+
+    # Dokumenty - Żółty
+    { mime = "application/pdf", fg = "#f9e2af" },
+    { mime = "application/*doc*", fg = "#f9e2af" },
+    { mime = "application/*xls*", fg = "#f9e2af" },
+    { mime = "application/*ppt*", fg = "#f9e2af" },
+
+    # Kod - Niebieski
+    { mime = "text/x-python", fg = "#89b4fa" },
+    { mime = "text/javascript", fg = "#89b4fa" },
+    { mime = "application/json", fg = "#89b4fa" },
+
+    # Katalogi - Niebieski bold
+    { name = "*/", fg = "#89b4fa", bold = true },
+
+    # Ukryte pliki - Szary
+    { name = ".*", fg = "#6c7086" },
+
+    # Symlinki - Cyan
+    { is = "link", fg = "#94e2d5" },
+
+    # Orphan links - Czerwony
+    { is = "orphan", fg = "#f38ba8" },
+
+    # Pliki wykonywalne - Zielony bold
+    { is = "exec", fg = "#a6e3a1", bold = true },
+
+    # Specjalne pliki/foldery
+    { name = ".git/", fg = "#fab387" },
+    { name = ".gitignore", fg = "#fab387" },
+    { name = "node_modules/", fg = "#6c7086" },
+    { name = "__pycache__/", fg = "#6c7086" },
+    { name = ".venv/", fg = "#6c7086" },
+    { name = "venv/", fg = "#6c7086" },
+
+    # Config files
+    { name = "*.toml", fg = "#fab387" },
+    { name = "*.yaml", fg = "#fab387" },
+    { name = "*.yml", fg = "#fab387" },
+    { name = "*.json", fg = "#fab387" },
+
+    # Markdown
+    { name = "*.md", fg = "#89dceb" },
+    { name = "README*", fg = "#89dceb", bold = true },
+
+    # Docker
+    { name = "Dockerfile*", fg = "#89b4fa" },
+    { name = "docker-compose*", fg = "#89b4fa" },
+
+    # Lock files
+    { name = "*.lock", fg = "#6c7086" },
+    { name = "package-lock.json", fg = "#6c7086" },
+]
+
+[icon]
+# Podstawowe ikony
+rules = [
+    { name = "*/", text = "" },  # Folder
+    { name = ".git/", text = "" },
+    { name = "node_modules/", text = "" },
+    { name = "__pycache__/", text = "" },
+    { name = ".venv/", text = "" },
+
+    # Pliki
+    { name = "*.py", text = "" },
+    { name = "*.js", text = "" },
+    { name = "*.ts", text = "" },
+    { name = "*.vue", text = "" },
+    { name = "*.json", text = "" },
+    { name = "*.md", text = "" },
+    { name = "*.toml", text = "" },
+    { name = "*.yaml", text = "" },
+    { name = "*.yml", text = "" },
+    { name = "*.lua", text = "" },
+    { name = "*.sh", text = "" },
+    { name = "*.sql", text = "" },
+    { name = "*.html", text = "" },
+    { name = "*.css", text = "" },
+    { name = "*.scss", text = "" },
+    { name = "*.svg", text = "" },
+
+    # Obrazy
+    { name = "*.png", text = "" },
+    { name = "*.jpg", text = "" },
+    { name = "*.jpeg", text = "" },
+    { name = "*.gif", text = "" },
+    { name = "*.webp", text = "" },
+
+    # Dokumenty
+    { name = "*.pdf", text = "" },
+    { name = "*.doc*", text = "" },
+    { name = "*.xls*", text = "" },
+
+    # Archiwa
+    { name = "*.zip", text = "" },
+    { name = "*.tar*", text = "" },
+    { name = "*.gz", text = "" },
+    { name = "*.rar", text = "" },
+    { name = "*.7z", text = "" },
+
+    # Git
+    { name = ".gitignore", text = "" },
+    { name = ".gitmodules", text = "" },
+
+    # Docker
+    { name = "Dockerfile*", text = "" },
+    { name = "docker-compose*", text = "" },
+
+    # Config
+    { name = "Makefile", text = "" },
+    { name = "Cargo.toml", text = "" },
+    { name = "package.json", text = "" },
+    { name = "requirements.txt", text = "" },
+
+    # Fallback
+    { name = "*", text = "" },
+]

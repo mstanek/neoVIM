@@ -1,0 +1,110 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+[╭─](fg:surface1)\
+$directory\
+$git_branch\
+$git_status\
+$python\
+$nodejs\
+[ ](fg:overlay0)\
+[ \\[](fg:overlay1)\
+$username\
+[ ](fg:overlay0)\
+$time\
+[ \\]](fg:overlay1)
+[╰─](fg:surface1)$character"""
+
+palette = 'elegant'
+
+[username]
+show_always = true
+style_user = "fg:subtext1"
+style_root = "bold fg:red"
+format = '[$user](fg:subtext1)'
+
+[directory]
+style = "bold fg:sapphire"
+format = "[$path]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[git_branch]
+symbol = " "
+style = "fg:mauve"
+format = '[ on $symbol$branch]($style)'
+
+[git_status]
+format = '([ \($stashed$modified$staged$untracked$deleted$ahead_behind\)]($style))'
+style = "fg:overlay1"
+conflicted = "[conflict:${count}](fg:red)·"
+ahead = "[⇡${count}](fg:green)·"
+behind = "[⇣${count}](fg:yellow)·"
+diverged = "[⇡${ahead_count}⇣${behind_count}](fg:yellow)·"
+up_to_date = ""
+untracked = "[+${count}new](fg:red)·"
+stashed = "[${count}stashed](fg:teal)·"
+modified = "[${count}mod](fg:yellow)·"
+staged = "[${count}staged](fg:green)·"
+renamed = "[${count}renamed](fg:blue)·"
+deleted = "[${count}del](fg:red)·"
+
+[nodejs]
+symbol = "⬢"
+style = "fg:green"
+format = '[ via $symbol $version]($style)'
+detect_files = ["package.json", ".node-version"]
+detect_folders = ["node_modules"]
+
+[python]
+symbol = ""
+style = "fg:yellow"
+format = '[ via $symbol $version]($style)'
+
+[time]
+disabled = false
+time_format = "%H:%M"
+style = "fg:overlay1"
+format = '[ $time]($style)'
+
+[line_break]
+disabled = false
+
+[character]
+disabled = false
+success_symbol = '[❯](bold fg:green)'
+error_symbol = '[❯](bold fg:red)'
+
+[cmd_duration]
+format = "[ $duration]($style)"
+style = "fg:yellow"
+disabled = false
+min_time = 2000
+
+[palettes.elegant]
+rosewater = "#f5e0dc"
+flamingo = "#f2cdcd"
+pink = "#f5c2e7"
+mauve = "#cba6f7"
+red = "#f38ba8"
+maroon = "#eba0ac"
+peach = "#fab387"
+yellow = "#f9e2af"
+green = "#a6e3a1"
+teal = "#94e2d5"
+sky = "#89dceb"
+sapphire = "#89b4fa"
+blue = "#89b4fa"
+lavender = "#b4befe"
+text = "#cdd6f4"
+subtext1 = "#bac2de"
+subtext0 = "#a6adc8"
+overlay2 = "#9399b2"
+overlay1 = "#7f849c"
+overlay0 = "#6c7086"
+surface2 = "#585b70"
+surface1 = "#45475a"
+surface0 = "#313244"
+base = "#1e1e2e"
+mantle = "#181825"
+crust = "#11111b"

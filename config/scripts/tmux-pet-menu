@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Pet snippets menu: search, add new, edit all
+
+C='\033[0;36m'
+G='\033[0;32m'
+M='\033[0;35m'
+B='\033[1m'
+D='\033[2m'
+N='\033[0m'
+
+count=$(grep -c '^\[\[snippets\]\]' ~/.config/pet/snippet.toml 2>/dev/null || echo 0)
+
+clear
+printf "\n${B}${M}  Pet Snippets${N}  ${D}(${count} snippetów)${N}\n\n"
+printf "  ${B}${C}s${N}  ${G}Szukaj${N}       Znajdź i kopiuj do schowka\n"
+printf "  ${B}${C}a${N}  ${G}Dodaj${N}        Nowy snippet\n"
+printf "  ${B}${C}e${N}  ${G}Edytuj${N}       Otwórz w edytorze\n"
+printf "  ${B}${C}x${N}  ${G}Wykonaj${N}      Znajdź i uruchom\n"
+printf "\n${D}  q = wyjdź${N}\n\n"
+printf "${B}Wybierz: ${N}"
+
+read -rsn1 choice
+
+case "$choice" in
+  s|S) pet clip ;;
+  a|A) pet new ;;
+  e|E) ${EDITOR:-nvim} ~/.config/pet/snippet.toml ;;
+  x|X) pet exec ;;
+  q|Q) exit 0 ;;
+  *) pet clip ;;
+esac

@@ -1,0 +1,353 @@
+#!/usr/bin/env bash
+# Git quick view - interactive file browser with cursor navigation
+# j/k ↑/↓ = navigate files  Enter = open in nvim  d = diff
+# gg/G = first/last  PgUp/PgDn = page  r = refresh  q = quit
+
+pane_path=$(tmux display-message -p '#{pane_current_path}')
+cd "$pane_path" 2>/dev/null || exit 1
+
+git_root=$(git rev-parse --show-toplevel 2>/dev/null)
+if [[ -z "$git_root" ]]; then
+  echo "Not a git repository"
+  sleep 3
+  exit 0
+fi
+
+cd "$git_root"
+
+C='\033[0;36m'; Y='\033[1;33m'; G='\033[0;32m'; R='\033[0;31m'
+M='\033[0;35m'; B='\033[1m'; D='\033[2m'; N='\033[0m'
+BC='\033[1;36m'
+
+TERM_H=$(tput lines)
+repo_name=$(basename "$git_root")
+
+lines=()
+fpaths=()
+ftypes=()
+offset=0
+cursor=-1
+
+_add() {
+  lines+=("$1")
+  fpaths+=("${2:-}")
+  ftypes+=("${3:-}")
+}
+
+render_content() {
+  lines=()
+  fpaths=()
+  ftypes=()
+
+  # ─── Header ───
+  local branch=$(git branch --show-current 2>/dev/null || echo "detached")
+  local upstream=$(git rev-parse --abbrev-ref @{upstream} 2>/dev/null)
+  local ahead=$(git rev-list --count @{upstream}..HEAD 2>/dev/null || echo 0)
+  local behind=$(git rev-list --count HEAD..@{upstream} 2>/dev/null || echo 0)
+
+  local hdr="${B}${C}  ${repo_name}${N} ${D}→${N} ${B}${C}${branch}${N}"
+  if [[ -n "$upstream" ]]; then
+    hdr+="${D} ← ${upstream}${N}"
+    [[ "$ahead" -gt 0 ]] && hdr+=" ${G}↑${ahead}${N}"
+    [[ "$behind" -gt 0 ]] && hdr+=" ${R}↓${behind}${N}"
+  fi
+  _add "$hdr"
+  _add "${D}──────────────────────────────────────────${N}"
+
+  # ─── Staged Changes ───
+  local staged_ns=$(git diff --cached --name-status 2>/dev/null)
+  if [[ -n "$staged_ns" ]]; then
+    local sc=$(echo "$staged_ns" | wc -l | tr -d ' ')
+    local ss=$(git diff --cached --stat 2>/dev/null | tail -1)
+    local sn=$(git diff --cached --numstat 2>/dev/null)
+    _add ""
+    _add "${B}${G}  Staged Changes (${sc})${N} ${D}${ss}${N}"
+    while IFS=$'\t' read -r st f rest; do
+      local ic="" cl="" tf="$f"
+      case "$st" in
+        A)  ic="A" cl="$G" ;;
+        M)  ic="M" cl="$Y" ;;
+        D)  ic="D" cl="$R" ;;
+        R*) ic="R" cl="$C" tf="$rest" ;;
+        C*) ic="C" cl="$C" tf="$rest" ;;
+        *)  ic="$st" cl="$D" ;;
+      esac
+      local si=$(echo "$sn" | awk -F'\t' -v x="$tf" '$3==x {printf "+%s -%s", $1, $2}')
+      if [[ "$st" == R* || "$st" == C* ]]; then
+        _add "    ${cl}${ic} ${tf}${N} ${D}← ${f}${N} ${D}${si}${N}" "$tf" "staged"
+      else
+        _add "    ${cl}${ic} ${f}${N} ${D}${si}${N}" "$f" "staged"
+      fi
+    done <<< "$staged_ns"
+  fi
+
+  # ─── Changes (unstaged) ───
+  local mod_ns=$(git diff --name-status 2>/dev/null)
+  if [[ -n "$mod_ns" ]]; then
+    local mc=$(echo "$mod_ns" | wc -l | tr -d ' ')
+    local ms=$(git diff --stat 2>/dev/null | tail -1)
+    local mn=$(git diff --numstat 2>/dev/null)
+    _add ""
+    _add "${B}${Y}  Changes (${mc})${N} ${D}${ms}${N}"
+    while IFS=$'\t' read -r st f rest; do
+      local ic="" cl="" tf="$f"
+      case "$st" in
+        M)  ic="M" cl="$Y" ;;
+        D)  ic="D" cl="$R" ;;
+        R*) ic="R" cl="$C" tf="$rest" ;;
+        *)  ic="$st" cl="$D" ;;
+      esac
+      local si=$(echo "$mn" | awk -F'\t' -v x="$tf" '$3==x {printf "+%s -%s", $1, $2}')
+      if [[ "$st" == R* ]]; then
+        _add "    ${cl}${ic} ${tf}${N} ${D}← ${f}${N} ${D}${si}${N}" "$tf" "modified"
+      else
+        _add "    ${cl}${ic} ${f}${N} ${D}${si}${N}" "$f" "modified"
+      fi
+    done <<< "$mod_ns"
+  fi
+
+  # ─── Untracked ───
+  local ut=$(git ls-files --others --exclude-standard 2>/dev/null)
+  if [[ -n "$ut" ]]; then
+    local uc=$(echo "$ut" | wc -l | tr -d ' ')
+    _add ""
+    _add "${B}${D}  Untracked (${uc})${N}"
+    while IFS= read -r f; do
+      _add "    ${D}U ${f}${N}" "$f" "untracked"
+    done <<< "$ut"
+  fi
+
+  # ─── Clean ───
+  if [[ -z "$staged_ns" && -z "$mod_ns" && -z "$ut" ]]; then
+    _add ""
+    _add "${G}  ✓ Clean working tree${N}"
+  fi
+
+  # ─── Stashes ───
+  local sl=$(git stash list 2>/dev/null)
+  if [[ -n "$sl" ]]; then
+    local slc=$(echo "$sl" | wc -l | tr -d ' ')
+    _add ""
+    _add "${D}──────────────────────────────────────────${N}"
+    _add ""
+    _add "${B}${C}  Stashes (${slc})${N}"
+    while IFS= read -r entry; do
+      local ref="${entry%%:*}"
+      local r2="${entry#*: }"
+      local msg="${r2#*: }"
+      local num="${ref#stash@\{}"
+      num="${num%\}}"
+      local sstat=$(git stash show "stash@{${num}}" --stat 2>/dev/null | tail -1)
+      _add "    ${C}${ref}${N} ${msg} ${D}${sstat}${N}" "stash@{${num}}" "stash"
+    done <<< "$sl"
+  fi
+
+  _add ""
+  _add "${D}──────────────────────────────────────────${N}"
+
+  # ─── Recent commits ───
+  _add ""
+  _add "${B}${M}  Recent commits${N}"
+  while IFS= read -r l; do
+    _add "  $l"
+  done < <(git log --oneline --graph --decorate --color=always -15 2>/dev/null)
+}
+
+# ─── Cursor navigation ───
+_cnext() {
+  (( cursor < 0 )) && { _cfirst; return; }
+  for ((i=cursor+1; i<${#lines[@]}; i++)); do
+    [[ -n "${fpaths[$i]}" ]] && { cursor=$i; return; }
+  done
+}
+
+_cprev() {
+  (( cursor < 0 )) && { _cfirst; return; }
+  for ((i=cursor-1; i>=0; i--)); do
+    [[ -n "${fpaths[$i]}" ]] && { cursor=$i; return; }
+  done
+}
+
+_cfirst() {
+  for ((i=0; i<${#lines[@]}; i++)); do
+    [[ -n "${fpaths[$i]}" ]] && { cursor=$i; return; }
+  done
+  cursor=-1
+}
+
+_clast() {
+  for ((i=${#lines[@]}-1; i>=0; i--)); do
+    [[ -n "${fpaths[$i]}" ]] && { cursor=$i; return; }
+  done
+  cursor=-1
+}
+
+_cnearest() {
+  local t=${1:-0}
+  for ((i=t; i<${#lines[@]}; i++)); do
+    [[ -n "${fpaths[$i]}" ]] && { cursor=$i; return; }
+  done
+  for ((i=t-1; i>=0; i--)); do
+    [[ -n "${fpaths[$i]}" ]] && { cursor=$i; return; }
+  done
+  cursor=-1
+}
+
+_cpgdn() {
+  (( cursor < 0 )) && return
+  local n=0
+  for ((i=cursor+1; i<${#lines[@]}; i++)); do
+    [[ -n "${fpaths[$i]}" ]] && { cursor=$i; ((n++)); (( n >= visible/2 )) && return; }
+  done
+}
+
+_cpgup() {
+  (( cursor < 0 )) && return
+  local n=0
+  for ((i=cursor-1; i>=0; i--)); do
+    [[ -n "${fpaths[$i]}" ]] && { cursor=$i; ((n++)); (( n >= visible/2 )) && return; }
+  done
+}
+
+_censure() {
+  (( cursor < 0 )) && return
+  if (( cursor < offset )); then
+    offset=$cursor
+    (( offset > 0 )) && ((offset--))
+  elif (( cursor >= offset + visible )); then
+    offset=$((cursor - visible + 2))
+    (( offset < 0 )) && offset=0
+  fi
+}
+
+# ─── Display ───
+visible=$((TERM_H - 3))
+(( visible < 5 )) && visible=5
+
+recalc() {
+  total=${#lines[@]}
+  max_offset=$((total - visible))
+  (( max_offset < 0 )) && max_offset=0
+  (( offset > max_offset )) && offset=$max_offset
+}
+
+draw() {
+  printf "\033[H\033[2J\n"
+  local end=$((offset + visible))
+  (( end > total )) && end=$total
+  for ((j=offset; j<end; j++)); do
+    if (( j == cursor && cursor >= 0 )); then
+      printf " ${BC}▸${N}%b\n" "${lines[$j]:2}"
+    else
+      printf "%b\n" "${lines[$j]}"
+    fi
+  done
+  local bar="${D} q=zamknij  r=odśwież  j/k=nawiguj  Enter=otwórz  d=diff"
+  if (( max_offset > 0 )); then
+    local p=$((offset + 1)) pct=0
+    (( max_offset > 0 )) && pct=$((offset * 100 / max_offset))
+    printf "\n%b  ${N}${B}%d-%d${N}${D}/%d (%d%%)${N}" "$bar" "$p" "$end" "$total" "$pct"
+  else
+    printf "\n%b${N}" "$bar"
+  fi
+}
+
+# ─── Actions ───
+_open() {
+  (( cursor < 0 )) && return
+  local fp="${fpaths[$cursor]}" ft="${ftypes[$cursor]}"
+  [[ -z "$fp" ]] && return
+  case "$ft" in
+    staged|modified|untracked)
+      [[ -f "$fp" ]] && nvim "$fp" || _diff
+      ;;
+    stash)
+      if command -v delta &>/dev/null; then
+        git stash show -p "$fp" 2>/dev/null | delta --paging=always
+      else
+        git stash show -p "$fp" 2>/dev/null | less -R
+      fi
+      ;;
+  esac
+}
+
+_diff() {
+  (( cursor < 0 )) && return
+  local fp="${fpaths[$cursor]}" ft="${ftypes[$cursor]}"
+  [[ -z "$fp" ]] && return
+  local out=""
+  case "$ft" in
+    staged)   out=$(git diff --cached -- "$fp" 2>/dev/null) ;;
+    modified) out=$(git diff -- "$fp" 2>/dev/null) ;;
+    stash)    out=$(git stash show -p "$fp" 2>/dev/null) ;;
+    *)        return ;;
+  esac
+  [[ -z "$out" ]] && return
+  if command -v delta &>/dev/null; then
+    echo "$out" | delta --paging=always
+  else
+    echo "$out" | less -R
+  fi
+}
+
+# ─── Init ───
+render_content
+_cnearest 0
+recalc
+_censure
+draw
+
+# ─── Auto-refresh ───
+REFRESH_SIG=$(mktemp -t gitquick.XXXX)
+trap "rm -f '${REFRESH_SIG}' '${REFRESH_SIG}.new'; kill \$BG_PID 2>/dev/null" EXIT
+
+(
+  if command -v fswatch &>/dev/null; then
+    fswatch -o -l 1 "$git_root/.git/HEAD" "$git_root/.git/index" "$git_root/.git/refs" 2>/dev/null | while read -r; do
+      touch "${REFRESH_SIG}.new"
+    done
+  else
+    while true; do sleep 5; touch "${REFRESH_SIG}.new"; done
+  fi
+) &
+BG_PID=$!
+
+_refresh() {
+  local co=$cursor
+  render_content
+  _cnearest $co
+  recalc
+  _censure
+  draw
+}
+
+# ─── Main loop ───
+while true; do
+  if [[ -f "${REFRESH_SIG}.new" ]]; then
+    rm -f "${REFRESH_SIG}.new"
+    _refresh
+  fi
+
+  IFS= read -rsn1 -d '' -t 1 key
+  [[ -z "$key" ]] && continue
+
+  case "$key" in
+    j) _cnext; _censure; recalc; draw ;;
+    k) _cprev; _censure; recalc; draw ;;
+    G) _clast; _censure; recalc; draw ;;
+    g) read -rsn1 -t 0.3 k2; [[ "$k2" == "g" ]] && { _cfirst; _censure; recalc; draw; } ;;
+    d) _diff; _refresh ;;
+    r|R) _refresh ;;
+    q|Q) break ;;
+    $'\n') _open; _refresh ;;
+    $'\033')
+      read -rsn2 -t 0.1 arr
+      case "$arr" in
+        '[A') _cprev; _censure; recalc; draw ;;
+        '[B') _cnext; _censure; recalc; draw ;;
+        '[5') _cpgup; _censure; recalc; draw ;;
+        '[6') _cpgdn; _censure; recalc; draw ;;
+      esac
+      ;;
+  esac
+done

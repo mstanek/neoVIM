@@ -1,0 +1,50 @@
+# =============================================================================
+# Lazygit Configuration - Catppuccin Mocha Theme + Nerd Fonts
+# =============================================================================
+
+gui:
+  # Nerd Fonts v3 - ikony w commitach, plikach, etc.
+  nerdFontsVersion: "3"
+  showIcons: true
+  showFileIcons: true
+
+  # UI preferences
+  showRandomTip: false
+  showCommandLog: false
+
+  # Catppuccin Mocha Theme
+  theme:
+    activeBorderColor:
+      - "#89b4fa"  # Blue
+      - bold
+    inactiveBorderColor:
+      - "#a6adc8"  # Subtext0
+    optionsTextColor:
+      - "#89b4fa"  # Blue
+    selectedLineBgColor:
+      - "#313244"  # Surface0
+    selectedRangeBgColor:
+      - "#45475a"  # Surface1
+    cherryPickedCommitBgColor:
+      - "#45475a"  # Surface1
+    cherryPickedCommitFgColor:
+      - "#cba6f7"  # Mauve
+    unstagedChangesColor:
+      - "#f38ba8"  # Red
+    defaultFgColor:
+      - "#cdd6f4"  # Text
+    searchingActiveBorderColor:
+      - "#f9e2af"  # Yellow
+
+git:
+  paging:
+    colorArg: always
+    pager: delta --dark --paging=never --side-by-side --line-numbers
+
+os:
+  editPreset: nvim
+
+keybinding:
+  universal:
+    quit: q
+    quit-alt1: <c-c>

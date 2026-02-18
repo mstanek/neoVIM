@@ -58,7 +58,7 @@ Gitsigns wyswietla **inline blame** -- szary tekst na koncu kazdej linii, ktory
 pokazuje kto ostatnio zmienil ta linie, kiedy i z jakim commit message.
 
 ```
-  42    def calculate_tax(amount):    mstanek, 3 days ago • Add tax calculation
+  42    def calculate_tax(amount):    jkowalski, 3 days ago • Add tax calculation
 ```
 
 To dziala automatycznie -- nie musisz nic naciskac. Wystarczy przesunac kursor na

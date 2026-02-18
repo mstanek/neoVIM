@@ -1,6 +1,6 @@
 # Przywrocenie konfiguracji srodowiska
 
-Kompletna instrukcja odtworzenia srodowiska deweloperskiego: Neovim + Kitty + tmux.
+Kompletna instrukcja odtworzenia srodowiska deweloperskiego: Neovim + Kitty + tmux + Yazi + LazyGit.
 
 > Snapshot z: 2026-02-18
 > System: macOS (Apple Silicon / arm64)
@@ -63,34 +63,91 @@ xargs brew install --cask < config/brew-casks.txt
 ## 2. Kopiowanie konfiguracji
 
 ```bash
+# Zsh
+cp config/zsh/zshrc ~/.zshrc
+cp config/zsh/zprofile ~/.zprofile
+
+# Git
+cp config/git/gitconfig ~/.gitconfig
+cp config/git/gitignore_global ~/.gitignore_global
+mkdir -p ~/.config/delta
+cp config/delta/unified.gitconfig ~/.config/delta/
+
 # Neovim
 mkdir -p ~/.config/nvim/lua/custom
-cp config/nvim/init.lua ~/.config/nvim/init.lua
-cp config/nvim/lazy-lock.json ~/.config/nvim/lazy-lock.json
-cp config/nvim/lua/custom/diffview-render.lua ~/.config/nvim/lua/custom/diffview-render.lua
+cp config/nvim/init.lua ~/.config/nvim/
+cp config/nvim/lazy-lock.json ~/.config/nvim/
+cp config/nvim/lua/custom/diffview-render.lua ~/.config/nvim/lua/custom/
 
 # Kitty
 mkdir -p ~/.config/kitty
-cp config/kitty/kitty.conf ~/.config/kitty/kitty.conf
+cp config/kitty/kitty.conf ~/.config/kitty/
+cp config/kitty/startup.session ~/.config/kitty/
 
 # tmux
 cp config/tmux/tmux.conf ~/.tmux.conf
+
+# Skrypty tmux (Cmd+Shift+* popups)
+mkdir -p ~/.local/bin
+cp config/scripts/tmux-* ~/.local/bin/
+chmod +x ~/.local/bin/tmux-*
+
+# Starship prompt
+cp config/starship.toml ~/.config/starship.toml
+
+# Yazi
+mkdir -p ~/.config/yazi
+cp config/yazi/*.toml config/yazi/init.lua ~/.config/yazi/
+
+# LazyGit
+mkdir -p ~/.config/lazygit
+cp config/lazygit/config.yml ~/.config/lazygit/
+
+# Atuin (shell history)
+mkdir -p ~/.config/atuin
+cp config/atuin/config.toml ~/.config/atuin/
+
+# Pet (snippet manager)
+mkdir -p ~/.config/pet
+cp config/pet/*.toml ~/.config/pet/
+
+# Btop
+mkdir -p ~/.config/btop
+cp config/btop/btop.conf ~/.config/btop/
 ```
 
 Albo jednolinijkowo (z katalogu vim-tutor):
 
 ```bash
-mkdir -p ~/.config/nvim/lua/custom ~/.config/kitty && \
-cp config/nvim/init.lua ~/.config/nvim/ && \
-cp config/nvim/lazy-lock.json ~/.config/nvim/ && \
+mkdir -p ~/.config/{nvim/lua/custom,kitty,yazi,lazygit,delta,atuin,pet,btop} ~/.local/bin && \
+cp config/zsh/zshrc ~/.zshrc && cp config/zsh/zprofile ~/.zprofile && \
+cp config/git/gitconfig ~/.gitconfig && cp config/git/gitignore_global ~/.gitignore_global && \
+cp config/delta/unified.gitconfig ~/.config/delta/ && \
+cp config/nvim/init.lua config/nvim/lazy-lock.json ~/.config/nvim/ && \
 cp config/nvim/lua/custom/diffview-render.lua ~/.config/nvim/lua/custom/ && \
-cp config/kitty/kitty.conf ~/.config/kitty/ && \
-cp config/tmux/tmux.conf ~/.tmux.conf
+cp config/kitty/kitty.conf config/kitty/startup.session ~/.config/kitty/ && \
+cp config/tmux/tmux.conf ~/.tmux.conf && \
+cp config/scripts/tmux-* ~/.local/bin/ && chmod +x ~/.local/bin/tmux-* && \
+cp config/starship.toml ~/.config/starship.toml && \
+cp config/yazi/*.toml config/yazi/init.lua ~/.config/yazi/ && \
+cp config/lazygit/config.yml ~/.config/lazygit/ && \
+cp config/atuin/config.toml ~/.config/atuin/ && \
+cp config/pet/*.toml ~/.config/pet/ && \
+cp config/btop/btop.conf ~/.config/btop/
 ```
 
 ---
 
-## 3. Inicjalizacja pluginow Neovim
+## 3. Inicjalizacja pluginow Yazi
+
+```bash
+# Zainstaluj pluginy zdefiniowane w package.toml
+ya pkg install
+```
+
+---
+
+## 4. Inicjalizacja pluginow Neovim
 
 ```bash
 # Pierwsze uruchomienie — Lazy.nvim zainstaluje sie automatycznie
@@ -105,7 +162,7 @@ nvim
 
 ---
 
-## 4. Konfiguracja tmux
+## 5. Konfiguracja tmux
 
 ```bash
 # Zainstaluj TPM (Tmux Plugin Manager) jesli jeszcze nie masz
@@ -118,7 +175,7 @@ tmux
 
 ---
 
-## 5. Weryfikacja
+## 6. Weryfikacja
 
 Po instalacji sprawdz czy wszystko dziala:
 
@@ -142,11 +199,21 @@ nvim exercises/python/calculator.py
 
 ---
 
-## 6. Struktura plikow konfiguracji
+## 7. Struktura plikow konfiguracji
 
 ```
 config/
 ├── README.md                          ← ten plik
+├── brew-formulae.txt                  ← lista pakietow brew
+├── brew-casks.txt                     ← lista czcionek (cask)
+├── zsh/
+│   ├── zshrc                          ← aliasy, PATH, pluginy, prompt
+│   └── zprofile                       ← profil logowania
+├── git/
+│   ├── gitconfig                      ← user, delta pager, rebase, diff
+│   └── gitignore_global               ← globalne wykluczenia (.DS_Store, *~)
+├── delta/
+│   └── unified.gitconfig              ← konfiguracja delta (git diff pager)
 ├── nvim/
 │   ├── init.lua                       ← glowna konfiguracja (2534 linii)
 │   │                                     vim.opt, keybindy, 49 pluginow z setupem
@@ -154,16 +221,48 @@ config/
 │   └── lua/custom/
 │       └── diffview-render.lua        ← custom renderer dla Diffview
 ├── kitty/
-│   └── kitty.conf                     ← konfiguracja terminala Kitty
-│                                         remappingi Cmd+P→Ctrl+P, Cmd+Shift+* itp.
-└── tmux/
-    └── tmux.conf                      ← konfiguracja tmux
-                                          prefix: Ctrl+Space, popups, nawigacja
+│   ├── kitty.conf                     ← konfiguracja terminala Kitty
+│   │                                     remappingi Cmd+P→Ctrl+P, Cmd+Shift+* itp.
+│   └── startup.session                ← auto-start tmux przy starcie Kitty
+├── tmux/
+│   └── tmux.conf                      ← konfiguracja tmux
+│                                         prefix: Ctrl+Space, popups, nawigacja
+├── starship.toml                      ← konfiguracja Starship prompt
+├── scripts/                           ← skrypty tmux popups (Cmd+Shift+*)
+│   ├── tmux-notes                     ← Cmd+Shift+N: notatki
+│   ├── tmux-notes-toggle              ← Cmd+Shift+N: toggle notatek
+│   ├── tmux-scratch                   ← Cmd+Shift+S: scratchpad
+│   ├── tmux-cheatsheet                ← Cmd+Shift+K: sciaga skrotow
+│   ├── tmux-git-quick                 ← Cmd+Shift+G: szybkie operacje git
+│   ├── tmux-git-diff                  ← helper: git diff
+│   ├── tmux-journal                   ← Cmd+Shift+J: dziennik
+│   ├── tmux-shortcuts-help            ← Cmd+Shift+?: pomoc skrotow
+│   ├── tmux-claude-account            ← Cmd+Shift+A: Claude account switcher
+│   ├── tmux-pet                       ← pet snippets helper
+│   ├── tmux-pet-clip                  ← Cmd+Shift+P: pet clipboard
+│   ├── tmux-pet-menu                  ← pet menu helper
+│   ├── tmux-notes-count               ← licznik notatek (statusbar)
+│   └── tmux-notes-preview             ← podglad notatek
+├── yazi/
+│   ├── yazi.toml                      ← glowna konfiguracja (manager, preview, opener)
+│   ├── keymap.toml                    ← keybindy (sort, search, view, goto, plugins)
+│   ├── theme.toml                     ← Catppuccin Mocha theme + ikony Nerd Font
+│   ├── init.lua                       ← pluginy: git, starship, bookmarks, yatline
+│   └── package.toml                   ← lista pluginow (ya pkg install)
+├── lazygit/
+│   └── config.yml                     ← konfiguracja LazyGit
+├── atuin/
+│   └── config.toml                    ← Atuin — inteligentna historia shella
+├── pet/
+│   ├── config.toml                    ← Pet — snippet manager config
+│   └── snippet.toml                   ← zapisane snippety
+└── btop/
+    └── btop.conf                      ← Btop — monitor systemowy
 ```
 
 ---
 
-## 7. Kluczowe ustawienia
+## 8. Kluczowe ustawienia
 
 | Ustawienie          | Wartosc                           |
 |---------------------|-----------------------------------|

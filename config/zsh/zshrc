@@ -1,0 +1,294 @@
+alias lsd='eza -la --color=always --group-directories-first --icons'
+# If you come from bash you might have to change your $PATH.
+# export PATH=$HOME/bin:/usr/local/bin:$PATH
+
+# Deduplicate PATH (prevents bloat on re-source)
+typeset -U path PATH
+
+# Path to your oh-my-zsh installation.
+export ZSH="$HOME/.oh-my-zsh"
+
+# Set name of the theme to load --- if set to "random", it will
+# load a random theme each time oh-my-zsh is loaded, in which case,
+# to know which specific one was loaded, run: echo $RANDOM_THEME
+# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+ZSH_THEME="robbyrussell"
+
+# Set list of themes to pick from when loading at random
+# Setting this variable when ZSH_THEME=random will cause zsh to load
+# a theme from this variable instead of looking in $ZSH/themes/
+# If set to an empty array, this variable will have no effect.
+# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
+
+# Uncomment the following line to use case-sensitive completion.
+# CASE_SENSITIVE="true"
+
+# Uncomment the following line to use hyphen-insensitive completion.
+# Case-sensitive completion must be off. _ and - will be interchangeable.
+# HYPHEN_INSENSITIVE="true"
+
+# Uncomment one of the following lines to change the auto-update behavior
+# zstyle ':omz:update' mode disabled  # disable automatic updates
+# zstyle ':omz:update' mode auto      # update automatically without asking
+# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
+
+# Uncomment the following line to change how often to auto-update (in days).
+# zstyle ':omz:update' frequency 13
+
+# Uncomment the following line if pasting URLs and other text is messed up.
+# DISABLE_MAGIC_FUNCTIONS="true"
+
+# Uncomment the following line to disable colors in ls.
+# DISABLE_LS_COLORS="true"
+
+# Uncomment the following line to disable auto-setting terminal title.
+# DISABLE_AUTO_TITLE="true"
+
+# Uncomment the following line to enable command auto-correction.
+# ENABLE_CORRECTION="true"
+
+# Uncomment the following line to display red dots whilst waiting for completion.
+# You can also set it to another string to have that shown instead of the default red dots.
+# e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
+# Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
+# COMPLETION_WAITING_DOTS="true"
+
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# You can set one of the optional three formats:
+# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# or set a custom format using the strftime function format specifications,
+# see 'man strftime' for details.
+# HIST_STAMPS="mm/dd/yyyy"
+
+# Would you like to use another custom folder than $ZSH/custom?
+# ZSH_CUSTOM=/path/to/new-custom-folder
+
+# Which plugins would you like to load?
+# Standard plugins can be found in $ZSH/plugins/
+# Custom plugins may be added to $ZSH_CUSTOM/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+# plugins=(git zsh-autosuggestions fast-syntax-highlighting)  # BACKUP
+plugins=(git zsh-autocomplete zsh-autocomplete-bridge zsh-syntax-highlighting npm nvm docker docker-compose pip python brew)
+
+# NVM lazy loading (ładowanie dopiero przy pierwszym użyciu node/npm/nvm)
+zstyle ':omz:plugins:nvm' lazy true
+
+# Completions fpath (musi być przed oh-my-zsh compinit)
+fpath=(/opt/homebrew/share/zsh/site-functions $HOME/.docker/completions $fpath)
+
+# Disable terminal flow control (XON/XOFF) so Ctrl+S reaches zsh (menu-search)
+stty -ixon 2>/dev/null
+
+source $ZSH/oh-my-zsh.sh
+
+# Initialize Starship prompt (Warp-like modern prompt)
+eval "$(starship init zsh)"
+
+# User configuration
+
+# export MANPATH="/usr/local/man:$MANPATH"
+
+# You may need to manually set your language environment
+# export LANG=en_US.UTF-8
+
+# Preferred editor for local and remote sessions
+# if [[ -n $SSH_CONNECTION ]]; then
+#   export EDITOR='vim'
+# else
+#   export EDITOR='mvim'
+# fi
+
+# Compilation flags
+# export ARCHFLAGS="-arch x86_64"
+
+# Set personal aliases, overriding those provided by oh-my-zsh libs,
+# plugins, and themes. Aliases can be placed here, though oh-my-zsh
+# users are encouraged to define aliases within the ZSH_CUSTOM folder.
+# For a full list of active aliases, run `alias`.
+#
+# Example aliases
+# alias zshconfig="mate ~/.zshrc"
+# alias ohmyzsh="mate ~/.oh-my-zsh"
+# Optimized PATH configuration - most important paths first
+export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
+export PATH="/opt/homebrew/opt/node@22/bin:$PATH"
+export PATH="$HOME/arm-toolchains/gcc-arm-none-eabi-9-2020-q2-update/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+[ -d "$HOME/.lmstudio/bin" ] && export PATH="$PATH:$HOME/.lmstudio/bin"
+
+[[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path zsh)"
+export JAVA_HOME=/opt/homebrew/Cellar/openjdk@21/21.0.10/libexec/openjdk.jdk/Contents/Home
+export PATH=$JAVA_HOME/bin:$PATH
+# FZF (suppress harmless "can't change option: zle" warning from fzf 0.67)
+{ [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh; } 2>/dev/null
+
+# FZF configuration (Warp-like search)
+export FZF_DEFAULT_OPTS="
+  --height 40%
+  --layout=reverse
+  --border
+  --inline-info
+  --preview 'echo {}'
+  --preview-window down:3:hidden:wrap
+  --bind 'ctrl-/:toggle-preview'
+  --color=fg:#d0d0d0,bg:#121212,hl:#5f87af
+  --color=fg+:#d0d0d0,bg+:#262626,hl+:#5fd7ff
+  --color=info:#afaf87,prompt:#d7005f,pointer:#af5fff
+  --color=marker:#87ff00,spinner:#af5fff,header:#87afaf
+"
+
+# Warp-like Ctrl+R history search with fzf
+export FZF_CTRL_R_OPTS="
+  --preview 'echo {}'
+  --preview-window down:3:hidden:wrap
+  --bind 'ctrl-/:toggle-preview'
+  --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
+  --header 'Press CTRL-Y to copy command into clipboard'
+  --border-label ' Command History '
+"
+
+# Better autosuggestions (like Warp) - DISABLED: using zsh-autocomplete instead
+# ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=8"  # Subtle gray color
+# ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+# ZSH_AUTOSUGGEST_USE_ASYNC=true  # Better performance
+# bindkey '^ ' autosuggest-accept  # Accept with Ctrl+Space
+# bindkey '^f' autosuggest-accept  # Accept with Ctrl+F (like Warp)
+
+# zsh-autocomplete configuration
+zstyle ':autocomplete:*' min-input 1  # Start completing after 1 character
+bindkey '^I' menu-select              # Tab opens menu
+bindkey '\t' menu-select              # Tab opens menu (alternative)
+bindkey -M menuselect '\r' .accept-line  # Enter accepts and executes
+
+# Better history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt HIST_VERIFY
+setopt SHARE_HISTORY
+setopt APPEND_HISTORY
+setopt INC_APPEND_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_REDUCE_BLANKS
+setopt HIST_IGNORE_SPACE
+
+# Better completion (Warp-like)
+setopt AUTO_MENU
+setopt COMPLETE_IN_WORD
+setopt ALWAYS_TO_END
+setopt AUTO_LIST
+setopt AUTO_PARAM_SLASH
+unsetopt MENU_COMPLETE  # Don't autoselect first completion
+
+# Warp-like keybindings
+bindkey '^[[1;3C' forward-word      # Alt+Right - move forward one word
+bindkey '^[[1;3D' backward-word     # Alt+Left - move backward one word
+bindkey '^[[1;9C' forward-word      # Alt+Right (alternative)
+bindkey '^[[1;9D' backward-word     # Alt+Left (alternative)
+bindkey '^[^[[C' forward-word       # Alt+Right (another variant)
+bindkey '^[^[[D' backward-word      # Alt+Left (another variant)
+bindkey '^[[3;3~' kill-word         # Alt+Delete - delete word forward
+bindkey '^[^?' backward-kill-word   # Alt+Backspace - delete word backward
+bindkey '^A' beginning-of-line      # Ctrl+A - go to beginning
+bindkey '^E' end-of-line            # Ctrl+E - go to end
+bindkey '^K' kill-line              # Ctrl+K - kill to end of line
+bindkey '^U' backward-kill-line     # Ctrl+U - kill to beginning of line
+bindkey '^L' clear-screen           # Ctrl+L - clear screen
+bindkey '^W' backward-kill-word     # Ctrl+W - kill word backward
+
+# Bat aliases removed - use 'bat' explicitly for advanced preview, 'cat' for standard output
+
+# Eza configuration - more subtle colors
+export EZA_COLORS="di=34:ln=36:so=32:pi=33:ex=31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30"
+
+# Eza aliases (modern ls replacement) - toned down colors
+alias ls='eza --color=auto --group-directories-first'
+alias ll='eza -l --color=auto --group-directories-first'
+alias la='eza -la --color=auto --group-directories-first'
+alias lt='eza --tree --color=auto --group-directories-first'
+alias lg='eza -la --color=auto --group-directories-first --git'
+alias topp='glances'
+
+# System monitoring tools
+alias dockertop='ctop'
+alias btm='btop'  # btm jako shortcut dla btop
+
+# Dev tools (delta, ripgrep, fd, lazygit, difftastic)
+alias lzg='lazygit'
+alias dft='difft'  # difftastic - strukturalny diff
+alias lazymail='aerc'
+
+
+# Added by Antigravity
+[ -d "$HOME/.antigravity/antigravity/bin" ] && export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
+
+# Dodanie wsparcia LSP dla claude code
+export ENABLE_LSP_TOOL=1
+alias timeout="gtimeout"
+
+# Claude Code account switcher
+alias claude-account='~/.claude/claude-account'
+
+# NVM jest ładowany lazy przez oh-my-zsh plugin (zstyle ':omz:plugins:nvm' lazy true)
+
+# ═══════════════════════════════════════════════════════════════
+# Warp-like tools
+# ═══════════════════════════════════════════════════════════════
+
+# thefuck - auto-korekta błędów (wpisz 'fuck' lub 'fk' po błędzie)
+eval $(thefuck --alias)
+alias fk='fuck'
+
+# zoxide - inteligentne cd (użyj 'z <fragment>' zamiast cd)
+eval "$(zoxide init zsh)"
+
+# atuin - zaawansowana historia (Ctrl+R)
+# Wyłącz FZF history widget żeby atuin mógł przejąć Ctrl+R
+bindkey -r '^R'
+eval "$(atuin init zsh)"
+
+# Neovim jako domyślny edytor
+alias vim="nvim"
+alias vi="nvim"
+export EDITOR="nvim"
+
+# ═══════════════════════════════════════════════════════════════
+# Yazi - nowoczesny file manager (jak Neovim dla mc)
+# ═══════════════════════════════════════════════════════════════
+
+# Wrapper function - zmienia katalog przy wyjściu z yazi
+function y() {
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+    yazi "$@" --cwd-file="$tmp"
+    if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+        cd -- "$cwd"
+    fi
+    rm -f -- "$tmp"
+}
+
+# Alias dla szybkiego dostępu
+alias yy="y"
+alias fm="y"  # file manager
+
+
+# Yazi dual-pane (jak Midnight Commander) - wymaga tmux
+function ymc() {
+    if [ -z "$TMUX" ]; then
+        # Uruchom nową sesję tmux z dwoma panelami yazi
+        tmux new-session -d -s yazi-dual 'yazi'
+        tmux split-window -h 'yazi'
+        tmux select-pane -t 0
+        tmux attach-session -t yazi-dual
+    else
+        # Już w tmux - podziel okno
+        tmux split-window -h 'yazi'
+    fi
+}

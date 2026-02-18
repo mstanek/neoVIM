@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Pet snippet browser - wybierz i skopiuj do schowka
+
+CYAN='\033[0;36m'
+GREEN='\033[0;32m'
+MAGENTA='\033[0;35m'
+BOLD='\033[1m'
+DIM='\033[2m'
+NC='\033[0m'
+
+snippet_file=~/.config/pet/snippet.toml
+tags=$(grep 'tag = \[' "$snippet_file" | sed 's/.*\[//;s/\].*//;s/"//g;s/,/\n/g' | tr -d ' ' | sort -u)
+
+clear
+printf "${BOLD}${MAGENTA}  Pet Snippets${NC}  ${DIM}(wybierz → schowek)${NC}\n"
+printf "${DIM}──────────────────────────────────────────${NC}\n\n"
+printf "  ${BOLD}${CYAN}a${NC}  ${GREEN}Wszystkie${NC}\n"
+
+declare -a tag_list
+i=1
+while IFS= read -r tag; do
+  [[ -z "$tag" ]] && continue
+  tag_list+=("$tag")
+  count=$(grep -c "\"$tag\"" "$snippet_file")
+  printf "  ${BOLD}${CYAN}%s${NC}  ${GREEN}%-14s${NC} ${DIM}(%s)${NC}\n" "$i" "$tag" "$count"
+  ((i++))
+done <<< "$tags"
+
+printf "\n${DIM}  q = wyjdź${NC}\n\n"
+printf "${BOLD}Kategoria: ${NC}"
+read -rsn1 choice
+
+case "$choice" in
+  q|Q) exit 0 ;;
+  a|A) pet clip --color ;;
+  [0-9])
+    idx=$((choice - 1))
+    if [[ $idx -ge 0 && $idx -lt ${#tag_list[@]} ]]; then
+      pet clip --color --tag "${tag_list[$idx]}"
+    else
+      pet clip --color
+    fi
+    ;;
+  *) pet clip --color ;;
+esac

@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# Toggle read-only preview panel for project notes
+# Auto-refreshes when file changes (fswatch) or every 3s fallback
+
+NOTES_FILE="$1"
+
+if [[ -z "$NOTES_FILE" ]]; then
+  echo "Usage: tmux-notes-preview <file>"
+  exit 1
+fi
+
+if [[ ! -f "$NOTES_FILE" ]]; then
+  echo "No notes yet. Press Cmd+Shift+N to create."
+  sleep infinity
+fi
+
+render() {
+  clear
+  glow -s "$HOME/.config/glow/todo.json" -w "$(tput cols)" "$NOTES_FILE" 2>/dev/null || cat "$NOTES_FILE"
+}
+
+# Initial render
+render
+
+# Watch for changes - fswatch (macOS) or fallback to polling
+if command -v fswatch &>/dev/null; then
+  fswatch -o "$NOTES_FILE" | while read -r; do
+    render
+  done
+else
+  while true; do
+    sleep 3
+    render
+  done
+fi

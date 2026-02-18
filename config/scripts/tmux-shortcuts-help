@@ -1,0 +1,718 @@
+#!/usr/bin/env bash
+# Dynamic 4-column shortcuts help with terminal size detection
+# Scrolls with j/k/arrows when content exceeds terminal height
+
+C='\033[0;36m'
+G='\033[0;32m'
+M='\033[0;35m'
+Y='\033[0;33m'
+B='\033[1m'
+D='\033[2m'
+N='\033[0m'
+P="${D}pfx+${N}"
+L="${D}spc+${N}"
+
+# ─── Terminal size detection ───
+TERM_H=$(tput lines)
+TERM_W=$(tput cols)
+
+# Dynamic column widths based on terminal width
+# 4 columns + 3 separators (3 chars each " │ ")
+AVAIL=$((TERM_W - 9))
+W1=$((AVAIL * 25 / 100))
+W2=$((AVAIL * 24 / 100))
+W3=$((AVAIL * 23 / 100))
+
+# Minimum widths
+(( W1 < 30 )) && W1=30
+(( W2 < 28 )) && W2=28
+(( W3 < 26 )) && W3=26
+
+# Generate separator lines with ─ (multi-byte safe)
+mk_sep() { local i s=''; for ((i=0; i<$1; i++)); do s+='─'; done; echo "$s"; }
+S1=$(mk_sep $((W1 - 1)))
+S2=$(mk_sep $((W2 - 1)))
+S3=$(mk_sep $((W3 - 1)))
+S4=$(mk_sep $((AVAIL - W1 - W2 - W3 - 1)))
+
+# ─── Column 1: Popupy & Nawigacja & Lazygit ───
+c1=()
+c1+=("${B}${M} Popupy (Cmd+Shift)${N}")
+c1+=("${D} ${S1}${N}")
+c1+=(" ${B}${C}⇧N${N}  ${G}Todo${N}         Edytor notatek")
+c1+=(" ${B}${C}⇧M${N}  ${G}Todo Panel${N}   Podgląd w panelu")
+c1+=(" ${B}${C}⇧S${N}  ${G}Scratchpad${N}   Szybkie notatki")
+c1+=(" ${B}${C}⇧H${N}  ${G}Cheat Sheet${N}  Komendy (r/o)")
+c1+=(" ${B}${C}⇧G${N}  ${G}Git Quick${N}    Status+log+diff")
+c1+=(" ${B}${C}⇧D${N}  ${G}Lazygit${N}      Pełny Git TUI")
+c1+=(" ${B}${C}⇧J${N}  ${G}Journal${N}      Dziennik")
+c1+=(" ${B}${C}⇧Y${N}  ${G}Yazi${N}         File manager")
+c1+=(" ${B}${C}⇧K${N}  ${G}LazyDocker${N}   Docker TUI")
+c1+=(" ${B}${C}⇧B${N}  ${G}LazySQL${N}      Database TUI")
+c1+=(" ${B}${C}⇧T${N}  ${G}btop${N}         System monitor")
+c1+=(" ${B}${C}⇧P${N}  ${G}Pet${N}          Snippety")
+c1+=(" ${B}${C}⇧A${N}  ${G}Claude Acc${N}   Przełącz konto")
+c1+=(" ${B}${C}⇧E${N}  ${G}aerc${N}         Email client")
+c1+=(" ${B}${C}⇧?${N}  ${G}Help${N}         Ta pomoc")
+c1+=("")
+c1+=("${B}${M} Nawigacja (bez prefix)${N}")
+c1+=("${D} ${S1}${N}")
+c1+=(" ${B}${C}Alt+Arrow${N}     Panel tmux ←↑↓→")
+c1+=(" ${B}${C}Alt+⇧+←/→${N}    Zmień okno tmux")
+c1+=(" ${B}${C}Alt+1..9${N}      Skok do okna N")
+c1+=(" ${B}${C}Alt+n/p${N}       Next/prev okno")
+c1+=(" ${B}${C}Cmd+Arrow${N}     ${D}=Alt+Arrow${N}")
+c1+=(" ${B}${C}Cmd+⇧+←/→${N}    ${D}=Alt+⇧+←/→${N}")
+c1+=(" ${B}${C}Cmd+R${N}         ${D}=Ctrl+R (atuin)${N}")
+c1+=(" ${B}${C}Right click${N}   Menu kontekstowe")
+c1+=("")
+c1+=("${B}${M} Lazygit ${D}(⇧D)${N}")
+c1+=("${D} ${S1}${N}")
+c1+=(" ${B}${C}Space${N}    Stage/unstage plik")
+c1+=(" ${B}${C}a${N}        Stage/unstage all")
+c1+=(" ${B}${C}c${N}        Commit (edytor msg)")
+c1+=(" ${B}${C}P${N}        Push do remote")
+c1+=(" ${B}${C}p${N}        Pull z remote")
+c1+=(" ${B}${C}Enter${N}    Wejdź w diff pliku")
+c1+=(" ${B}${C}|${N}        Side-by-side/unified")
+c1+=(" ${B}${C}Ctrl+d/u${N} Scroll diff ↓/↑")
+c1+=(" ${B}${C}[/]${N}      Poprz./nast. panel")
+c1+=(" ${B}${C}/${N}        Szukaj / filtruj")
+c1+=(" ${B}${C}?${N}        Pomoc (keys)")
+c1+=(" ${B}${C}+${N}        Rozwiń/zwiń diff")
+c1+=("")
+c1+=("${B}${M} Yazi ${D}(⇧Y)${N}")
+c1+=("${D} ${S1}${N}")
+c1+=(" ${B}${C}h/l${N}      Parent / wejdź")
+c1+=(" ${B}${C}j/k${N}      Nawigacja ↓/↑")
+c1+=(" ${B}${C}Enter${N}    Otwórz plik")
+c1+=(" ${B}${C}Space${N}    Toggle zaznacz")
+c1+=(" ${B}${C}q${N}        Wyjdź (zach. cd)")
+c1+=(" ${B}${C}/${N}        Szukaj w katalogu")
+c1+=(" ${B}${C}z${N}        Skok zoxide")
+c1+=(" ${B}${C}.${N}        Pokaż ukryte")
+c1+=(" ${B}${C}y${N}  Kopiuj  ${B}${C}p${N}  Wklej")
+c1+=(" ${B}${C}d${N}  Usuń    ${B}${C}r${N}  Rename")
+c1+=(" ${B}${C}~${N}        Katalog domowy")
+c1+=(" ${B}${C}t${N}        Nowa karta")
+c1+=("")
+c1+=("${B}${M} btop ${D}(⇧T)${N}")
+c1+=("${D} ${S1}${N}")
+c1+=(" ${B}${C}f${N}        Filtruj procesy")
+c1+=(" ${B}${C}k${N}        Kill proces")
+c1+=(" ${B}${C}s${N}        Sortowanie")
+c1+=(" ${B}${C}t${N}        Widok drzewa")
+c1+=(" ${B}${C}e${N}        Środowisko proc.")
+c1+=(" ${B}${C}↑/↓${N}      Nawigacja")
+c1+=(" ${B}${C}Esc${N}      Wróć / anuluj")
+c1+=("")
+c1+=("${B}${M} Szybkie CLI${N}")
+c1+=("${D} ${S1}${N}")
+c1+=(" ${B}${C}jq${N}    Filtruj JSON")
+c1+=(" ${B}${C}yq${N}    Filtruj YAML/TOML")
+c1+=(" ${B}${C}glow${N}  Markdown terminal")
+c1+=(" ${B}${C}tldr${N}  Uproszczone man")
+c1+=("")
+c1+=("${B}${M} Atuin Historia${N}")
+c1+=("${D} ${S1}${N}")
+c1+=(" ${B}${C}Ctrl+R${N}   Szukaj historię")
+c1+=(" ${B}${C}↑/↓${N}      Przeglądaj wyniki")
+c1+=(" ${B}${C}Enter${N}    Wykonaj komendę")
+c1+=(" ${B}${C}Tab${N}      Wstaw do linii")
+c1+=(" ${D}Sync między maszynami${N}")
+c1+=("")
+c1+=("${B}${M} Pet Snippety ${D}(⇧P)${N}")
+c1+=("${D} ${S1}${N}")
+c1+=(" ${B}${C}Enter${N}    Kopiuj komendę")
+c1+=(" ${B}${C}Ctrl+E${N}   Edytuj snippety")
+c1+=(" ${B}${C}Ctrl+A${N}   Dodaj nowy snippet")
+c1+=(" ${D}367 snippetów → pbcopy${N}")
+c1+=("")
+c1+=("${B}${M} fzf Tryby${N}")
+c1+=("${D} ${S1}${N}")
+c1+=(" ${B}${C}Ctrl+T${N}   Wstaw ścieżkę")
+c1+=(" ${B}${C}Ctrl+R${N}   Historia (atuin)")
+c1+=(" ${B}${C}Alt+C${N}    cd do katalogu")
+c1+=(" ${B}${C}**Tab${N}    Glob → wybierz")
+c1+=(" ${B}${C}Tab/⇧Tab${N} Multi-select")
+c1+=("")
+c1+=("${B}${M} aerc Email ${D}(⇧E)${N}")
+c1+=("${D} ${S1}${N}")
+c1+=(" ${B}${C}j/k${N}      Nast./poprz. mail")
+c1+=(" ${B}${C}Enter${N}    Otwórz wiadomość")
+c1+=(" ${B}${C}C/m${N}      Nowy mail (compose)")
+c1+=(" ${B}${C}rr${N}       Odpowiedz wszystkim")
+c1+=(" ${B}${C}rq${N}       Odpowiedz z cytatem")
+c1+=(" ${B}${C}Rr/Rq${N}   Odp. nadawcy (+cyt)")
+c1+=(" ${B}${C}f${N}        Forward")
+c1+=(" ${B}${C}d${N}        Usuń (potwierdź)")
+c1+=(" ${B}${C}a${N}        Archiwizuj")
+c1+=(" ${B}${C}v/Space${N}  Zaznacz wiadomości")
+c1+=(" ${B}${C}J/K${N}      Nast./poprz. folder")
+c1+=(" ${B}${C}/${N}        Szukaj")
+c1+=(" ${B}${C}\\\\${N}        Filtruj")
+c1+=(" ${B}${C}T${N}        Toggle wątki")
+c1+=(" ${B}${C}Tab${N}      Zwiń/rozwiń wątek")
+c1+=(" ${B}${C}C-p/C-n${N} Poprz./nast. tab")
+c1+=(" ${B}${C}?${N}        Pomoc (keys)")
+c1+=(" ${B}${C}q${N}        Zamknij / wyjdź")
+c1+=("")
+c1+=("${B}${M} aerc Compose${N}")
+c1+=("${D} ${S1}${N}")
+c1+=(" ${B}${C}Tab${N}      Nast. pole (To/Subj)")
+c1+=(" ${D}nvim otwiera się jako edytor${N}")
+c1+=(" ${D}Po zapisaniu → review:${N}")
+c1+=(" ${B}${C}y${N} Wyślij  ${B}${C}e${N} Edytuj")
+c1+=(" ${B}${C}a${N} Załącznik ${B}${C}v${N} Podgląd")
+c1+=(" ${B}${C}q${N} Anuluj/odłóż")
+c1+=("")
+c1+=("${B}${M} Git Quick ${D}(⇧G)${N}")
+c1+=("${D} ${S1}${N}")
+c1+=(" ${B}${C}j/k${N}      Scroll status")
+c1+=(" ${B}${C}r${N}        Odśwież ręcznie")
+c1+=(" ${B}${C}d/u${N}      Pół strony ↓/↑")
+c1+=(" ${D}Auto-refresh (fswatch)${N}")
+
+# ─── Column 2: Tmux ───
+c2=()
+c2+=("${B}${M} Tmux Sesje/Okna ${D}(pfx=C-Spc)${N}")
+c2+=("${D} ${S2}${N}")
+c2+=(" ${P}${B}${C}\$${N}      Zmień nazwę sesji")
+c2+=(" ${P}${B}${C},${N}      Zmień nazwę okna")
+c2+=(" ${P}${B}${C}c${N}      Nowe okno (cwd)")
+c2+=(" ${P}${B}${C}s${N}      Lista sesji (tree)")
+c2+=(" ${P}${B}${C}w${N}      Lista okien (tree)")
+c2+=(" ${P}${B}${C}d${N}      Detach od sesji")
+c2+=(" ${P}${B}${C}&${N}      Zamknij okno")
+c2+=(" ${P}${B}${C}r${N}      Reload tmux.conf")
+c2+=("")
+c2+=("${B}${M} Tmux Panele${N}")
+c2+=("${D} ${S2}${N}")
+c2+=(" ${P}${B}${C}|${N}      Split pionowy")
+c2+=(" ${P}${B}${C}-${N}      Split poziomy")
+c2+=(" ${P}${B}${C}hjkl${N}   Nawigacja (vim)")
+c2+=(" ${P}${B}${C}HJKL${N}   Resize (±5)")
+c2+=(" ${P}${B}${C}z${N}      Zoom/unzoom panel")
+c2+=(" ${P}${B}${C}x${N}      Zamknij panel")
+c2+=(" ${P}${B}${C}{ }${N}    Swap lewo/prawo")
+c2+=("")
+c2+=("${B}${M} Tmux Kopiowanie${N}")
+c2+=("${D} ${S2}${N}")
+c2+=(" ${P}${B}${C}[${N}      Tryb kopiowania (vi)")
+c2+=(" ${B}${C}v${N}          Zaznacz tekst")
+c2+=(" ${B}${C}y${N}          Kopiuj → schowek")
+c2+=(" ${B}${C}Mouse drag${N} Menu: Copy/Search")
+c2+=(" ${B}${C}2x click${N}   Zaznacz słowo")
+c2+=(" ${B}${C}3x click${N}   Zaznacz linię")
+c2+=("")
+c2+=("${B}${M} Nvim Todo ${D}(spc+t)${N}")
+c2+=("${D} ${S2}${N}")
+c2+=(" ${B}${C}tx${N} Toggle  ${B}${C}ta${N} Dodaj")
+c2+=(" ${B}${C}td/ti/tb${N}   Zmień status")
+c2+=(" ${B}${C}tj/tk${N}      Przesuń ↓/↑")
+c2+=(" ${B}${C}tD${N} Usuń   ${B}${C}tA${N} Archiwum")
+c2+=("")
+c2+=("${B}${M} Tmux Pluginy${N}")
+c2+=("${D} ${S2}${N}")
+c2+=(" ${G}resurrect${N}  Zapis/odtwórz sesje")
+c2+=(" ${G}continuum${N}  Auto-zapis co 15min")
+c2+=(" ${G}yank${N}       Kopiuj do schowka")
+c2+=(" ${G}menus${N}      ${D}Rozszerzone menu${N}")
+c2+=("")
+c2+=("${B}${M} LazyDocker ${D}(⇧K)${N}")
+c2+=("${D} ${S2}${N}")
+c2+=(" ${B}${C}Enter${N}  Wejdź w kontener")
+c2+=(" ${B}${C}d${N}      Usuń kontener")
+c2+=(" ${B}${C}s${N}      Stop kontener")
+c2+=(" ${B}${C}r${N}      Restart")
+c2+=(" ${B}${C}a${N}      Attach (shell)")
+c2+=(" ${B}${C}l${N}      Logi follow")
+c2+=(" ${B}${C}[/]${N}    Panele ←/→")
+c2+=(" ${B}${C}b${N}      Bulk komendy")
+c2+=("")
+c2+=("${B}${M} LazySQL ${D}(⇧B)${N}")
+c2+=("${D} ${S2}${N}")
+c2+=(" ${B}${C}Enter${N}  Wykonaj query")
+c2+=(" ${B}${C}C-Spc${N}  Autocomplete SQL")
+c2+=(" ${B}${C}/${N}      Filtruj wiersze")
+c2+=(" ${B}${C}e${N}      Edycja komórki")
+c2+=(" ${B}${C}[/]${N}    Panele ←/→")
+c2+=("")
+c2+=("${B}${M} GitHub CLI ${D}(gh)${N}")
+c2+=("${D} ${S2}${N}")
+c2+=(" ${B}${C}gh pr${N}     PR create/view")
+c2+=(" ${B}${C}gh issue${N}  Issues lista")
+c2+=(" ${B}${C}gh repo${N}   Clone/fork/new")
+c2+=(" ${B}${C}gh run${N}    Status CI/CD")
+c2+=(" ${B}${C}gh browse${N} Otwórz w browser")
+c2+=("")
+c2+=("${B}${M} Przydatne Brew${N}")
+c2+=("${D} ${S2}${N}")
+c2+=(" ${B}${C}delta${N}   Lepszy diff (git)")
+c2+=(" ${B}${C}ncdu${N}    Disk usage TUI")
+c2+=(" ${B}${C}mkcert${N}  Cert. HTTPS dev")
+c2+=(" ${B}${C}ffmpeg${N}  Video/audio proc.")
+c2+=(" ${B}${C}mc${N}      2-panel file mgr")
+c2+=("")
+c2+=("${B}${M} Docker Compose${N}")
+c2+=("${D} ${S2}${N}")
+c2+=(" ${B}${C}dc up -d${N}  Start w tle")
+c2+=(" ${B}${C}dc down${N}   Zatrzymaj stos")
+c2+=(" ${B}${C}dc logs -f${N} Logi follow")
+c2+=(" ${B}${C}dc ps${N}     Lista kontenerów")
+c2+=(" ${B}${C}dc exec${N}   Shell w konten.")
+c2+=(" ${D}dc = docker compose${N}")
+c2+=("")
+c2+=("${B}${M} Tmux Zaawansowane${N}")
+c2+=("${D} ${S2}${N}")
+c2+=(" ${P}${B}${C}:${N}      Tryb komend")
+c2+=(" ${P}${B}${C}t${N}      Wyświetl czas")
+c2+=(" ${P}${B}${C}q${N}      Numery paneli")
+c2+=(" ${P}${B}${C}!${N}      Panel → okno")
+c2+=(" ${P}${B}${C}Space${N}  Zmień layout")
+c2+=("")
+c2+=("${B}${M} Bash Sztuczki${N}")
+c2+=("${D} ${S2}${N}")
+c2+=(" ${B}${C}!!${N}       Powtórz ostatnią")
+c2+=(" ${B}${C}!$${N}       Ostatni argument")
+c2+=(" ${B}${C}!^${N}       Pierwszy argument")
+c2+=(" ${B}${C}C-x C-e${N}  Edytuj w \$EDITOR")
+c2+=(" ${B}${C}cd -${N}     Poprzedni katalog")
+c2+=(" ${B}${C}pushd/popd${N} Stos katalogów")
+
+# ─── Column 3: Neovim ───
+c3=()
+c3+=("${B}${M} Neovim ${D}(Ldr=Space)${N}")
+c3+=("${D} ${S3}${N}")
+c3+=(" ${L}${B}${C}w${N}      Zapisz plik")
+c3+=(" ${L}${B}${C}q${N}      Zamknij bufor")
+c3+=(" ${L}${B}${C}e${N}      Neo-tree explorer")
+c3+=(" ${B}${C}⇧H / ⇧L${N}   Poprz./nast. bufor")
+c3+=("")
+c3+=("${B}${M} Telescope ${D}(spc+f)${N}")
+c3+=("${D} ${S3}${N}")
+c3+=(" ${L}${B}${C}ff${N}     Szukaj pliki")
+c3+=(" ${L}${B}${C}fg${N}     Live grep (treść)")
+c3+=(" ${L}${B}${C}fb${N}     Otwarte bufory")
+c3+=(" ${L}${B}${C}fr${N}     Ostatnio otwierane")
+c3+=(" ${L}${B}${C}fk${N}     Skróty klawiszowe")
+c3+=("")
+c3+=("${B}${M} LSP & Kod${N}")
+c3+=("${D} ${S3}${N}")
+c3+=(" ${B}${C}gd${N}        Go to definition")
+c3+=(" ${B}${C}gr${N}        Find references")
+c3+=(" ${B}${C}K${N}         Hover documentation")
+c3+=(" ${L}${B}${C}ca${N}    Code action (fix)")
+c3+=(" ${L}${B}${C}rn${N}    Rename symbol")
+c3+=(" ${B}${C}[d / ]d${N}   Prev/next diagnostic")
+c3+=("")
+c3+=("${B}${M} Git ${D}(spc+g)${N}")
+c3+=("${D} ${S3}${N}")
+c3+=(" ${L}${B}${C}gb${N}    Git blame linia")
+c3+=(" ${L}${B}${C}gp${N}    Preview hunk diff")
+c3+=(" ${L}${B}${C}gd${N}    Diffview (split)")
+c3+=(" ${L}${B}${C}gg${N}    LazyGit w nvim")
+c3+=(" ${L}${B}${C}gl${N}    Git log graf")
+c3+=("")
+c3+=("${B}${M} Neovim Editing${N}")
+c3+=("${D} ${S3}${N}")
+c3+=(" ${B}${C}gcc${N}       Toggle komentarz")
+c3+=(" ${B}${C}gc${N}${D}(vis)${N}   Komentarz blok")
+c3+=(" ${B}${C}ciw${N}       Change in word")
+c3+=(" ${B}${C}diw${N}       Delete in word")
+c3+=(" ${B}${C}yiw${N}       Yank in word")
+c3+=(" ${B}${C}ci\"${N}       Change in quotes")
+c3+=(" ${B}${C}da(${N}       Delete around ()")
+c3+=(" ${B}${C}%${N}         Skocz do nawiasu")
+c3+=(" ${B}${C}>> / <<${N}   Indent / dedent")
+c3+=(" ${B}${C}.${N}         Powtórz akcję")
+c3+=(" ${B}${C}u / C-r${N}   Undo / redo")
+c3+=(" ${B}${C}*${N}         Szukaj pod kursorem")
+c3+=(" ${B}${C}zz${N}        Centruj kursor")
+c3+=("")
+c3+=("${B}${M} Nvim Marks/Jumps${N}")
+c3+=("${D} ${S3}${N}")
+c3+=(" ${B}${C}m{a-z}${N}  Ustaw mark lok.")
+c3+=(" ${B}${C}'{a-z}${N}  Skocz do mark")
+c3+=(" ${B}${C}C-o/C-i${N} Jump back/fwd")
+c3+=(" ${B}${C}gf${N}      Go to file")
+c3+=(" ${B}${C}gi${N}      Wróć do Insert")
+c3+=("")
+c3+=("${B}${M} Nvim Szukaj/Zamień${N}")
+c3+=("${D} ${S3}${N}")
+c3+=(" ${B}${C}/{patt}${N}   Szukaj w przód")
+c3+=(" ${B}${C}?{patt}${N}   Szukaj w tył")
+c3+=(" ${B}${C}n / N${N}     Nast. / poprz.")
+c3+=(" ${B}${C}:s/a/b/g${N}  Zamień w linii")
+c3+=(" ${B}${C}:%s/a/b/g${N} Zamień w pliku")
+c3+=("")
+c3+=("${B}${M} Nvim Surround${N}")
+c3+=("${D} ${S3}${N}")
+c3+=(" ${B}${C}ys{m}{c}${N} Dodaj surround")
+c3+=(" ${B}${C}ds{c}${N}    Usuń surround")
+c3+=(" ${B}${C}cs{o}{n}${N} Zmień surround")
+c3+=(" ${D}np: ysiw( → (word)${N}")
+c3+=("")
+c3+=("${B}${M} Nvim Windows${N}")
+c3+=("${D} ${S3}${N}")
+c3+=(" ${B}${C}C-w v${N}   Split pionowy")
+c3+=(" ${B}${C}C-w s${N}   Split poziomy")
+c3+=(" ${B}${C}C-w hjkl${N} Nawigacja paneli")
+c3+=(" ${B}${C}C-w q${N}   Zamknij panel")
+c3+=(" ${B}${C}C-w =${N}   Wyrównaj panele")
+c3+=("")
+c3+=("${B}${M} Nvim Folds/Misc${N}")
+c3+=("${D} ${S3}${N}")
+c3+=(" ${B}${C}za${N}      Toggle fold")
+c3+=(" ${B}${C}zR${N}      Otwórz wszystkie")
+c3+=(" ${B}${C}zM${N}      Zwiń wszystkie")
+c3+=(" ${B}${C}:set nu!${N} Toggle numery")
+c3+=(" ${B}${C}:noh${N}    Wyczyść highlight")
+c3+=("")
+c3+=("${B}${M} NeoTree ${D}(spc+e)${N}")
+c3+=("${D} ${S3}${N}")
+c3+=(" ${B}${C}a${N}      Nowy plik/katalog")
+c3+=(" ${B}${C}d${N}      Usuń")
+c3+=(" ${B}${C}r${N}      Zmień nazwę")
+c3+=(" ${B}${C}c/m${N}    Kopiuj / przenieś")
+c3+=(" ${B}${C}H${N}      Pokaż ukryte")
+c3+=(" ${B}${C}/${N}      Filtruj")
+c3+=(" ${B}${C}?${N}      Help NeoTree")
+c3+=("")
+c3+=("${B}${M} Nvim Rejestry/Makra${N}")
+c3+=("${D} ${S3}${N}")
+c3+=(" ${B}${C}\"+y${N}     Kopiuj → schowek")
+c3+=(" ${B}${C}\"+p${N}     Wklej ze schowka")
+c3+=(" ${B}${C}\"0p${N}     Wklej ostatni yank")
+c3+=(" ${B}${C}q{a-z}${N}  Nagrywaj makro")
+c3+=(" ${B}${C}@{a-z}${N}  Odtwórz makro")
+c3+=(" ${B}${C}@@${N}      Powtórz makro")
+c3+=(" ${B}${C}:reg${N}    Lista rejestrów")
+
+# ─── Column 4: Kitty + Tools + Aliases + ZSH ───
+c4=()
+c4+=("${B}${M} Kitty Terminal${N}")
+c4+=("${D} ${S4}${N}")
+c4+=(" ${B}${C}Cmd+T${N}          Nowa karta")
+c4+=(" ${B}${C}Cmd+N${N}          Nowe okno OS")
+c4+=(" ${B}${C}Ctrl+⇧+-${N}       Split poziomy")
+c4+=(" ${B}${C}Ctrl+⇧+Bkslsh${N}  Split pionowy")
+c4+=(" ${B}${C}Ctrl+⇧+HJKL${N}    Nawigacja paneli")
+c4+=(" ${B}${C}Ctrl+⇧+Alt+R${N}   Resize mode (hjkl)")
+c4+=(" ${B}${C}Ctrl+⇧+Z${N}       Zoom/stack layout")
+c4+=(" ${B}${C}Ctrl+⇧+E${N}       Open URL (hints)")
+c4+=(" ${B}${C}Ctrl+⇧+S${N}       Scrollback w pagerze")
+c4+=(" ${B}${C}Ctrl+⇧+P → F${N}   Hints: ścieżki")
+c4+=(" ${B}${C}Ctrl+⇧+P → H${N}   Hints: hashe git")
+c4+=(" ${B}${C}Ctrl+⇧+P → L${N}   Hints: numery linii")
+c4+=(" ${D}Catppuccin Mocha / JetBrainsMono 14pt${N}")
+c4+=(" ${D}Opacity 0.92 / Blur 20${N}")
+c4+=("")
+c4+=("${B}${M} CLI Narzędzia${N}")
+c4+=("${D} ${S4}${N}")
+c4+=(" ${B}${C}atuin${N}      ${G}Historia${N} ${D}Ctrl+R, sync hosts${N}")
+c4+=(" ${B}${C}zoxide${N}     ${G}Smart cd${N} ${D}z <q>, zi=fzf${N}")
+c4+=(" ${B}${C}thefuck${N}    ${G}Auto-korekta${N} ${D}fk=popraw${N}")
+c4+=(" ${B}${C}fzf${N}        ${G}Fuzzy finder${N} ${D}C-R,C-T,Alt+C${N}")
+c4+=(" ${B}${C}eza${N}        ${G}ls${N} ${D}ikony, git, drzewa${N}")
+c4+=(" ${B}${C}bat${N}        ${G}cat${N} ${D}kolory, numery, diff${N}")
+c4+=(" ${B}${C}fd${N}         ${G}find${N} ${D}regex, .gitignore${N}")
+c4+=(" ${B}${C}rg${N}         ${G}grep${N} ${D}ripgrep, typy, szybki${N}")
+c4+=(" ${B}${C}difft${N}      ${G}diff${N} ${D}structural, AST${N}")
+c4+=(" ${B}${C}starship${N}   ${G}Prompt${N} ${D}git/lang/env${N}")
+c4+=(" ${B}${C}pet${N}        ${G}Snippety (367)${N} ${D}C-E/C-A${N}")
+c4+=(" ${B}${C}lazygit${N}    ${G}Git TUI${N} ${D}alias: lzg${N}")
+c4+=(" ${B}${C}lazydocker${N} ${G}Docker TUI${N}")
+c4+=(" ${B}${C}lazysql${N}    ${G}Database TUI${N}")
+c4+=(" ${B}${C}aerc${N}       ${G}Email TUI${N} ${D}alias: ⇧E${N}")
+c4+=(" ${B}${C}glances${N}    ${G}System monitor${N} ${D}alias: topp${N}")
+c4+=(" ${B}${C}ctop${N}       ${G}Docker top${N} ${D}alias: dockertop${N}")
+c4+=(" ${B}${C}nvm${N}        ${G}Node versions${N}")
+c4+=(" ${B}${C}btop${N}       ${G}System resources${N} ${D}alias: btm${N}")
+c4+=("")
+c4+=("${B}${M} Aliasy Shell${N}")
+c4+=("${D} ${S4}${N}")
+c4+=(" ${B}${C}ls${N}   ${Y}eza${N}        ${B}${C}ll${N}   ${Y}eza -l${N}")
+c4+=(" ${B}${C}la${N}   ${Y}eza -la${N}    ${B}${C}lt${N}   ${Y}eza tree${N}")
+c4+=(" ${B}${C}lg${N}   ${Y}eza --git${N}  ${B}${C}lsd${N}  ${Y}eza icons${N}")
+c4+=(" ${B}${C}vim${N}  ${Y}nvim${N}       ${B}${C}vi${N}   ${Y}nvim${N}")
+c4+=(" ${B}${C}lzg${N}  ${Y}lazygit${N}    ${B}${C}dft${N}  ${Y}difft${N}")
+c4+=(" ${B}${C}fm${N}   ${Y}yazi${N}       ${B}${C}yy${N}   ${Y}yazi cd${N}")
+c4+=(" ${B}${C}fk${N}   ${Y}thefuck${N}    ${B}${C}y${N}    ${Y}yazi cd${N}")
+c4+=(" ${B}${C}topp${N} ${Y}glances${N}    ${B}${C}btm${N}  ${Y}btop${N}")
+c4+=("")
+c4+=("${B}${M} ZSH Klawisze${N}")
+c4+=("${D} ${S4}${N}")
+c4+=(" ${B}${C}Tab${N}          Autocomplete menu")
+c4+=(" ${B}${C}Shift+Tab${N}    Expand word")
+c4+=(" ${B}${C}Ctrl+S${N}       Szukaj w completion")
+c4+=(" ${B}${C}Ctrl+X /${N}     Recent paths")
+c4+=(" ${B}${C}↑ / ↓${N}        Szukaj hist./complete")
+c4+=(" ${B}${C}Alt+↑ / ↓${N}    Hist. wstecz / menu")
+c4+=(" ${B}${C}Ctrl+R${N}       Atuin historia")
+c4+=(" ${B}${C}Ctrl+T${N}       fzf wstaw ścieżkę")
+c4+=(" ${B}${C}Alt+C${N}        fzf cd do katalogu")
+c4+=(" ${B}${C}**Tab${N}        fzf glob → wybierz")
+c4+=(" ${B}${C}Alt+←/→${N}      Słowo lewo/prawo")
+c4+=(" ${B}${C}Alt+Bksp${N}     Usuń słowo wstecz")
+c4+=(" ${B}${C}Ctrl+A / E${N}   Początek / koniec")
+c4+=(" ${B}${C}Ctrl+W${N}       Usuń słowo wstecz")
+c4+=(" ${B}${C}Ctrl+U / K${N}   Wyczyść do pocz./końca")
+c4+=(" ${B}${C}Ctrl+L${N}       Wyczyść ekran")
+c4+=(" ${B}${C}Ctrl+X Ctrl+E${N} Edytuj w \$EDITOR")
+c4+=(" ${B}${C}Ctrl+Q${N}       Push line (zachowaj)")
+c4+=(" ${B}${C}Ctrl+_${N}       Undo")
+c4+=("")
+c4+=("${B}${M} ZSH Menu Completion${N}")
+c4+=("${D} ${S4}${N}")
+c4+=(" ${D}(gdy menu jest otwarte)${N}")
+c4+=(" ${B}${C}Tab / ⇧Tab${N}   Następny / poprzedni")
+c4+=(" ${B}${C}↑ ↓ ← →${N}     Nawigacja w menu")
+c4+=(" ${B}${C}Enter${N}        Przyjmij i wykonaj")
+c4+=(" ${B}${C}Ctrl+S${N}       Szukaj w menu")
+c4+=(" ${B}${C}Ctrl+_${N}       Cofnij wybór")
+c4+=(" ${B}${C}Esc${N}          Anuluj menu")
+c4+=("")
+c4+=("${B}${M} AI Narzędzia${N}")
+c4+=("${D} ${S4}${N}")
+c4+=(" ${B}${C}claude${N}   ${G}Claude Code${N} ${D}AI agent${N}")
+c4+=(" ${B}${C}gemini${N}   ${G}Gemini CLI${N} ${D}Google AI${N}")
+c4+=(" ${B}${C}codex${N}    ${G}OpenAI${N} ${D}Codex CLI${N}")
+c4+=("")
+c4+=("${B}${M} Więcej Brew${N}")
+c4+=("${D} ${S4}${N}")
+c4+=(" ${B}${C}uv/uvx${N}   ${G}Python${N} ${D}fast pip/venv${N}")
+c4+=(" ${B}${C}plantuml${N} ${G}UML${N} ${D}diagramy z kodu${N}")
+c4+=(" ${B}${C}tesseract${N} ${G}OCR${N} ${D}obraz → tekst${N}")
+c4+=(" ${B}${C}swaks${N}    ${G}SMTP${N} ${D}test email${N}")
+c4+=(" ${B}${C}mermaid${N}  ${G}Diagrams${N} ${D}md → SVG${N}")
+c4+=("")
+c4+=("${B}${M} Git Szybkie${N}")
+c4+=("${D} ${S4}${N}")
+c4+=(" ${B}${C}git stash${N}     ${D}Schowaj zmiany${N}")
+c4+=(" ${B}${C}git stash pop${N} ${D}Przywróć schowane${N}")
+c4+=(" ${B}${C}git rebase -i${N} ${D}Interakt. rebase${N}")
+c4+=(" ${B}${C}git cherry-pick${N} ${D}Weź commit${N}")
+c4+=(" ${B}${C}git bisect${N}    ${D}Szukaj złego commit${N}")
+c4+=("")
+c4+=("${B}${M} Network${N}")
+c4+=("${D} ${S4}${N}")
+c4+=(" ${B}${C}curl${N}      ${G}HTTP${N} ${D}requests/API${N}")
+c4+=(" ${B}${C}ssh${N}       ${G}Remote${N} ${D}shell/tunnel${N}")
+c4+=(" ${B}${C}scp${N}       ${G}Copy${N} ${D}przez SSH${N}")
+c4+=(" ${B}${C}wget${N}      ${G}Download${N} ${D}plików/stron${N}")
+c4+=(" ${B}${C}dig${N}       ${G}DNS${N} ${D}lookup/debug${N}")
+c4+=("")
+c4+=("${B}${M} jq / bat / fd${N}")
+c4+=("${D} ${S4}${N}")
+c4+=(" ${B}${C}jq .key${N}     ${D}Wyciągnij pole${N}")
+c4+=(" ${B}${C}jq '.[]'${N}    ${D}Iteruj po tablicy${N}")
+c4+=(" ${B}${C}jq -r${N}       ${D}Raw output (bez \")${N}")
+c4+=(" ${B}${C}bat -l json${N} ${D}Koloruj jako JSON${N}")
+c4+=(" ${B}${C}fd -e py${N}    ${D}Szukaj po rozszerzeniu${N}")
+c4+=(" ${B}${C}fd -H${N}       ${D}Uwzgl. ukryte pliki${N}")
+
+# ─── Pre-compute section membership per column ───
+# A "section" = consecutive non-empty lines (separated by empty lines)
+_build_sec() {
+  local col_name=$1 sec_name=$2
+  local s=-1 in_s=0
+  eval "local len=\${#${col_name}[@]}"
+  for ((i=0; i<len; i++)); do
+    eval "local val=\"\${${col_name}[$i]}\""
+    if [[ -z "$val" ]]; then
+      eval "${sec_name}[$i]=-1"
+      in_s=0
+    else
+      (( ! in_s )) && { ((s++)); in_s=1; }
+      eval "${sec_name}[$i]=$s"
+    fi
+  done
+}
+sec_c1=(); _build_sec c1 sec_c1
+sec_c2=(); _build_sec c2 sec_c2
+sec_c3=(); _build_sec c3 sec_c3
+sec_c4=(); _build_sec c4 sec_c4
+
+# ─── Generate output lines + per-column search text ───
+max=${#c1[@]}
+(( ${#c2[@]} > max )) && max=${#c2[@]}
+(( ${#c3[@]} > max )) && max=${#c3[@]}
+(( ${#c4[@]} > max )) && max=${#c4[@]}
+
+# Bulk ANSI strip + lowercase (2 sed/tr calls instead of ~1400 subshells)
+_SEP=$'\x1f'
+_tmpraw=$(mktemp) _tmpstrip=$(mktemp) _tmplc=$(mktemp)
+
+for ((i=0; i<max; i++)); do
+  printf "%b${_SEP}%b${_SEP}%b${_SEP}%b\n" "${c1[$i]:-}" "${c2[$i]:-}" "${c3[$i]:-}" "${c4[$i]:-}"
+done > "$_tmpraw"
+
+sed $'s/\033\[[0-9;]*m//g' "$_tmpraw" > "$_tmpstrip"
+tr '[:upper:]' '[:lower:]' < "$_tmpstrip" > "$_tmplc"
+rm -f "$_tmpraw"
+
+output=()
+lc1=(); lc2=(); lc3=(); lc4=()
+i=0
+exec 3< "$_tmpstrip"
+exec 4< "$_tmplc"
+while IFS="$_SEP" read -r s1 s2 s3 s4 <&3 && IFS="$_SEP" read -r l1 l2 l3 l4 <&4; do
+  p1=$((W1 - ${#s1})); (( p1 < 0 )) && p1=0
+  p2=$((W2 - ${#s2})); (( p2 < 0 )) && p2=0
+  p3=$((W3 - ${#s3})); (( p3 < 0 )) && p3=0
+
+  lc1+=("$l1"); lc2+=("$l2"); lc3+=("$l3"); lc4+=("$l4")
+
+  printf -v line "%b%*s ${D}│${N} %b%*s ${D}│${N} %b%*s ${D}│${N} %b" \
+    "${c1[$i]:-}" "$p1" "" "${c2[$i]:-}" "$p2" "" "${c3[$i]:-}" "$p3" "" "${c4[$i]:-}"
+  output+=("$line")
+
+  ((i++))
+done
+exec 3<&-
+exec 4<&-
+rm -f "$_tmpstrip" "$_tmplc"
+
+# ─── Display state ───
+display=("${output[@]}")
+filter_query=""
+search_active=0
+search_buf=""
+prev_filter=""
+
+visible=$((TERM_H - 3))
+(( visible < 10 )) && visible=10
+
+recalc() {
+  total=${#display[@]}
+  max_offset=$((total - visible))
+  (( max_offset < 0 )) && max_offset=0
+  (( offset > max_offset )) && offset=$max_offset
+}
+
+apply_filter() {
+  if [[ -z "$filter_query" ]]; then
+    display=("${output[@]}")
+  else
+    local q=$(printf "%s" "$filter_query" | tr '[:upper:]' '[:lower:]')
+    local matched=" "
+
+    # Find which sections match (per-column, space-delimited "col:sec" tokens)
+    for ((i=0; i<max; i++)); do
+      local s1v=${sec_c1[$i]:--1} s2v=${sec_c2[$i]:--1} s3v=${sec_c3[$i]:--1} s4v=${sec_c4[$i]:--1}
+      [[ "${lc1[$i]:-}" == *"$q"* && $s1v -ge 0 && "$matched" != *" 1:$s1v "* ]] && matched+="1:$s1v "
+      [[ "${lc2[$i]:-}" == *"$q"* && $s2v -ge 0 && "$matched" != *" 2:$s2v "* ]] && matched+="2:$s2v "
+      [[ "${lc3[$i]:-}" == *"$q"* && $s3v -ge 0 && "$matched" != *" 3:$s3v "* ]] && matched+="3:$s3v "
+      [[ "${lc4[$i]:-}" == *"$q"* && $s4v -ge 0 && "$matched" != *" 4:$s4v "* ]] && matched+="4:$s4v "
+    done
+
+    # Build display: include all rows belonging to any matched section
+    display=()
+    local last=-2
+    for ((i=0; i<max; i++)); do
+      local inc=0 sv
+      sv=${sec_c1[$i]:--1}; [[ $sv -ge 0 && "$matched" == *" 1:$sv "* ]] && inc=1
+      sv=${sec_c2[$i]:--1}; [[ $sv -ge 0 && "$matched" == *" 2:$sv "* ]] && inc=1
+      sv=${sec_c3[$i]:--1}; [[ $sv -ge 0 && "$matched" == *" 3:$sv "* ]] && inc=1
+      sv=${sec_c4[$i]:--1}; [[ $sv -ge 0 && "$matched" == *" 4:$sv "* ]] && inc=1
+      if (( inc )); then
+        # Add empty separator line between non-consecutive groups
+        (( last >= 0 && i - last > 1 )) && display+=("")
+        display+=("${output[$i]}")
+        last=$i
+      fi
+    done
+  fi
+  offset=0
+  recalc
+}
+
+draw() {
+  printf "\033[H\033[2J"
+  echo
+  local end=$((offset + visible))
+  (( end > total )) && end=$total
+  if (( total == 0 )); then
+    printf " ${D}Brak wyników dla: ${N}${B}%s${N}\n" "$filter_query"
+  else
+    for ((j=offset; j<end; j++)); do
+      printf "%b\n" "${display[$j]}"
+    done
+  fi
+  # Footer
+  if (( search_active )); then
+    printf "\n ${D}/${N}${B}%s${N}${D}█  (%d wyników)  Enter=potwierdź  Esc=anuluj${N}" "$search_buf" "$total"
+  elif [[ -n "$filter_query" ]]; then
+    printf "\n ${D}Filtr: ${N}${B}%s${N} ${D}(%d wyników)  /=nowy  Esc=wyczyść  q=zamknij${N}" "$filter_query" "$total"
+  elif (( max_offset > 0 )); then
+    local pos=$((offset + 1))
+    local pct=0
+    (( max_offset > 0 )) && pct=$((offset * 100 / max_offset))
+    printf "\n ${D}/=szukaj  q=zamknij  j/k ↑/↓=scroll  d/u=½str  gg/G=pocz/kon  ${N}${B}%d-%d${N}${D}/%d (%d%%)${N}" "$pos" "$end" "$total" "$pct"
+  else
+    printf "\n ${D}/=szukaj  q=zamknij${N}"
+  fi
+}
+
+offset=0
+recalc
+draw
+
+while true; do
+  read -rsn1 key
+
+  # ─── Search mode: live filtering as you type ───
+  if (( search_active )); then
+    case "$key" in
+      $'\033')
+        read -rsn2 -t 0.1 seq
+        if [[ -z "$seq" ]]; then
+          search_active=0; filter_query="$prev_filter"; search_buf=""
+          apply_filter; draw
+        else
+          case "$seq" in
+            '[B') (( offset < max_offset )) && ((offset++)) && draw ;;
+            '[A') (( offset > 0 )) && ((offset--)) && draw ;;
+          esac
+        fi ;;
+      '')
+        search_active=0; filter_query="$search_buf"; draw ;;
+      $'\177'|$'\b')
+        search_buf="${search_buf%?}"; filter_query="$search_buf"
+        apply_filter; draw ;;
+      *)
+        search_buf+="$key"; filter_query="$search_buf"
+        apply_filter; draw ;;
+    esac
+    continue
+  fi
+
+  # ─── Normal mode ───
+  case "$key" in
+    /)
+      search_active=1; prev_filter="$filter_query"; search_buf="$filter_query"
+      draw ;;
+    j|J) (( offset < max_offset )) && ((offset++)) && draw ;;
+    k|K) (( offset > 0 )) && ((offset--)) && draw ;;
+    G)   offset=$max_offset && draw ;;
+    g)   read -rsn1 -t 0.3 k2; [[ "$k2" == "g" ]] && offset=0 && draw ;;
+    d)   (( offset += visible/2 )); (( offset > max_offset )) && offset=$max_offset; draw ;;
+    u)   (( offset -= visible/2 )); (( offset < 0 )) && offset=0; draw ;;
+    q|Q) break ;;
+    $'\033')
+      read -rsn2 -t 0.1 arrow
+      if [[ -z "$arrow" ]]; then
+        if [[ -n "$filter_query" ]]; then
+          filter_query=""; search_buf=""; apply_filter; draw
+        fi
+      else
+        case "$arrow" in
+          '[B') (( offset < max_offset )) && ((offset++)) && draw ;;
+          '[A') (( offset > 0 )) && ((offset--)) && draw ;;
+          '[6') (( offset += visible )); (( offset > max_offset )) && offset=$max_offset; draw ;;
+          '[5') (( offset -= visible )); (( offset < 0 )) && offset=0; draw ;;
+        esac
+      fi ;;
+  esac
+done
