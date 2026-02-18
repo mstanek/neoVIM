@@ -1,0 +1,145 @@
+# ============================================================================
+# Cwiczenie: Poruszanie sie (motions) w Vimie
+# ============================================================================
+#
+# Instrukcje:
+#   - Uzywaj h/j/k/l zamiast strzalek
+#   - Cwicz kazda sekcje osobno, powtarzaj az ruchy stana sie naturalne
+#   - Pamietaj o {count} prefix: 5j = 5 linii w dol, 3w = 3 slowa do przodu
+#
+# ============================================================================
+
+# --- Sekcja 1: w / b / e / ge (slowa) ---
+# Poruszaj sie po slowach: w=nastepne, b=poprzednie, e=koniec, ge=koniec poprzedniego
+
+The quick brown fox jumps over the lazy dog near the river bank.
+She sells seashells by the seashore every single sunny Saturday morning.
+A very long sentence with many different words to practice word motions efficiently.
+Pack my box with five dozen liquor jugs and bring them to the warehouse.
+The five boxing wizards jump quickly across the narrow bridge at midnight.
+
+# --- Sekcja 2: W / B / E (SLOWA - oddzielone whitespace) ---
+# Duze W/B/E traktuja znaki specjalne jako czesc slowa
+
+user.name = "John";    config["database.host"] = "localhost:5432";
+https://example.com/api/v2/users?page=1&limit=20&sort=name
+obj.method(arg1, arg2).then(result => console.log(result));
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+data-testid="submit-button" aria-label="Submit form" class="btn btn--primary"
+
+# --- Sekcja 3: f / t / F / T (szukanie znaku w linii) ---
+# f{char} = do znaku, t{char} = przed znak, F/T = w lewo
+# Cwicz z ; (powtorz) i , (odwroc)
+
+function calculateTotalPrice(items, discount, taxRate) { return items * (1 - discount) * (1 + taxRate); }
+The "quick" brown (fox) jumps [over] the {lazy} dog - and then; it: rests.
+email@example.com, phone: +48-123-456-789, address: "ul. Dluga 15/3, 00-001 Warszawa"
+if (user.isActive && user.role === "admin" || user.permissions.includes("manage_users")) {
+a = 1; b = 2; c = 3; d = 4; e = 5; f = 6; g = 7; h = 8; i = 9; j = 10;
+
+# --- Sekcja 4: 0 / ^ / $ / g_ (pozycje w linii) ---
+# 0 = poczatek linii, ^ = pierwszy nie-bialy znak, $ = koniec, g_ = ostatni nie-bialy
+
+    This line has leading whitespace and trailing spaces too.
+        Deeply indented line with some code content here.
+  return calculateResult(inputA, inputB, optionsConfig);
+            const result = await fetchData(url, { timeout: 5000 });
+
+# --- Sekcja 5: { / } (nawigacja po paragrafach) ---
+# { = poprzedni pusty wiersz, } = nastepny pusty wiersz
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.
+Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.
+Deserunt mollit anim id est laborum et dolorum fuga.
+
+Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.
+Sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet.
+
+At vero eos et accusamus et iusto odio dignissimos ducimus.
+Qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores.
+
+# --- Sekcja 6: gg / G / {count}G (nawigacja po liniach) ---
+# gg = pierwsza linia, G = ostatnia linia, 15G = linia 15
+# Cwicz: skocz na linie 10, potem 30, potem 50, potem 1
+
+Linia do skakania - A
+Linia do skakania - B
+Linia do skakania - C
+Linia do skakania - D
+Linia do skakania - E
+Linia do skakania - F
+Linia do skakania - G
+Linia do skakania - H
+Linia do skakania - I
+Linia do skakania - J
+
+# --- Sekcja 7: H / M / L (pozycje na ekranie) ---
+# H = gora ekranu, M = srodek, L = dol
+# Cwicz: H -> M -> L -> H -> M -> L (powtarzaj)
+# Te komendy odnosza sie do widocznego okna, nie pliku
+
+Ten tekst jest tutaj tylko po to, zeby wypelnic ekran
+i dac ci miejsce do cwiczenia komend H, M i L.
+Przeskakuj miedzy gora, srodkiem i dolem widocznego okna.
+Zwroc uwage, ze pozycja zalezy od rozmiaru okna.
+Sprobuj polaczyc z zz (centruj), zt (gora) i zb (dol).
+
+# --- Sekcja 8: % (matching bracket) ---
+# % skacze do odpowiadajacego nawiasu/klamry
+
+function processData(input) {
+    if (input.length > 0) {
+        for (let i = 0; i < input.length; i++) {
+            const item = input[i];
+            if (item.isValid()) {
+                results.push(transform(item, { deep: true }));
+            }
+        }
+    }
+    return results;
+}
+
+const config = {
+    database: {
+        host: "localhost",
+        port: 5432,
+        credentials: {
+            username: "admin",
+            password: "secret",
+        },
+    },
+    cache: {
+        ttl: 3600,
+        driver: "redis",
+    },
+};
+
+# --- Sekcja 9: Ctrl-d / Ctrl-u / Ctrl-f / Ctrl-b (scrollowanie) ---
+# Ctrl-d = pol strony w dol, Ctrl-u = pol strony w gore
+# Ctrl-f = cala strona w dol, Ctrl-b = cala strona w gore
+
+Przewijaj ten dlugi blok tekstu uzywajac Ctrl-d i Ctrl-u.
+Poczuj roznice miedzy pol strony a cala strona.
+Zwroc uwage, gdzie laduje kursor po przewinieciu.
+Linia wypelniajaca numer 4.
+Linia wypelniajaca numer 5.
+Linia wypelniajaca numer 6.
+Linia wypelniajaca numer 7.
+Linia wypelniajaca numer 8.
+Linia wypelniajaca numer 9.
+Linia wypelniajaca numer 10.
+Linia wypelniajaca numer 11.
+Linia wypelniajaca numer 12.
+Linia wypelniajaca numer 13.
+Linia wypelniajaca numer 14.
+Linia wypelniajaca numer 15.
+Linia wypelniajaca numer 16.
+Linia wypelniajaca numer 17.
+Linia wypelniajaca numer 18.
+Linia wypelniajaca numer 19.
+Linia wypelniajaca numer 20.

@@ -1,0 +1,123 @@
+# ============================================================================
+# Cwiczenie: Operatory (d/c/y) + motions
+# ============================================================================
+#
+# Instrukcje:
+#   - Operator + motion = akcja na tekscie
+#   - dd = usun linie, cc = zmien linie, yy = kopiuj linie
+#   - p = wklej po kursorze, P = wklej przed kursorem
+#   - u = cofnij, Ctrl-r = przywroc
+#   - . = powtorz ostatnia zmiane
+#
+# ============================================================================
+
+# --- Sekcja 1: Usuwanie (d + motion) ---
+# Zadanie: Usun wskazane fragmenty tekstu
+
+# dw - usun slowo (ustaw kursor na "niepotrzebne" i nacisnij dw)
+To jest niepotrzebne zdanie do cwiczenia usuwania slow w Vimie.
+Kolejne niepotrzebne zdanie z nadmiarowymi zbednymi slowami tutaj.
+
+# d$ lub D - usun do konca linii (ustaw kursor i nacisnij D)
+Zachowaj ten poczatek USUN CALA RESZTE TEJ LINII
+Zostaw to tutaj ale ten fragment powinien zniknac z tego pliku
+
+# d0 - usun od kursora do poczatku linii
+USUN TEN POCZATEK ale zachowaj koncowke tej linii
+TEN FRAGMENT JEST ZBEDNY wartosciowa tresc na koncu
+
+# dd - usun cala linie (stan na linii i nacisnij dd)
+Ta linia powinna zostac.
+USUN TE CALA LINIE
+Ta linia tez powinna zostac.
+USUN ROWNIEZ TE LINIE
+I ta linia jest do zachowania.
+
+# d{ / d} - usun paragraf
+# Ustaw kursor w srodku paragrafu i uzyj dap (delete around paragraph)
+
+Ten paragraf jest zbedny.
+Powinien zostac usuniety w calosci.
+Wszystkie trzy linie naraz.
+
+A ten paragraf powinien pozostac
+nienaruszony po wykonaniu cwiczenia.
+
+# --- Sekcja 2: Zmiana (c + motion) ---
+# Zadanie: Zmien wskazane fragmenty na podane wartosci
+
+# cw - zmien slowo (ustaw na slowie do zmiany, cw, wpisz nowe)
+# Zmien "stare" na "nowe", "wolny" na "szybki", "maly" na "duzy"
+To jest stare rozwiazanie, ktore jest wolny i maly.
+Kolejny stare program, ktory jest wolny przy przetwarzaniu maly danych.
+
+# c$ lub C - zmien do konca linii
+# Ustaw kursor na "ZMIEN" i nacisnij C, wpisz nowy tekst
+Poczatek zostaje ZMIEN RESZTE NA: "nowa wartosc koncowa"
+Ta czesc OK ZMIEN TEN KONIEC NA COKOLWIEK CHCESZ
+
+# cc - zmien cala linie (nacisnij cc i wpisz nowa tresc)
+ZAMIEN TE LINIE NA: const name = "Jan Kowalski";
+ZAMIEN TE LINIE NA: function greet() { return "Czesc!"; }
+
+# ci" - zmien wewnatrz cudzyslowow (ustaw kursor wewnatrz "...")
+const message = "to jest stary tekst do zmiany";
+const title = "Niewlasciwy tytul strony";
+const label = 'zmien ten single-quoted string';
+
+# ci( - zmien wewnatrz nawiasow
+console.log("zmien ten argument na cos innego");
+const result = calculateTotal(stare, niepoprawne, argumenty);
+if (warunek_do_zmiany && drugi_warunek) {
+
+# --- Sekcja 3: Kopiowanie i wklejanie (y + motion, p/P) ---
+# Zadanie: Kopiuj i wklej wskazane fragmenty
+
+# yy - skopiuj linie, p - wklej ponizej, P - wklej powyzej
+# Skopiuj te linie (yy) i wklej ja 3 razy ponizej (3p)
+const CONFIG_TEMPLATE = { host: "localhost", port: 3000 };
+
+# yw - skopiuj slowo
+# Skopiuj slowo "KOPIUJ" i wklej je na koncu kazdej linii ponizej (A, spacja, Ctrl-r 0)
+Dodaj na koncu: KOPIUJ
+Pierwsza linia docelowa
+Druga linia docelowa
+Trzecia linia docelowa
+
+# y$ - skopiuj do konca linii
+# Skopiuj od "KOPIUJ" do konca, wklej w nastepnej linii
+Tekst przed KOPIUJ wartosc: 42, status: "active", ready: true
+Wklej tutaj:
+
+# yap - skopiuj paragraf i wklej ponizej
+
+Ten paragraf powinien byc
+skopiowany i wklejony
+dokladnie pod spodem.
+
+# --- Sekcja 4: Operatory z liczba (count + operator) ---
+
+# 3dd - usun 3 linie naraz (stan na pierwszej i nacisnij 3dd)
+Linia do usuniecia 1
+Linia do usuniecia 2
+Linia do usuniecia 3
+Ta linia zostaje.
+
+# 2yy + p - skopiuj 2 linie i wklej
+Skopiuj mnie - linia A
+Skopiuj mnie - linia B
+Wklej powyzsze linie tutaj (nacisnij p):
+
+# d3w - usun 3 slowa (stan na "jeden" i nacisnij d3w)
+Zachowaj jeden dwa trzy reszte tego zdania prosze.
+
+# --- Sekcja 5: Powtarzanie z kropka (.) ---
+# Zadanie: Wykonaj operacje raz, potem powtarzaj kropka
+
+# Zmien kazde "TODO" na "DONE" (cw na pierwszym, potem n. n. n.)
+# (Najpierw /TODO<CR>, potem cw DONE <Esc>, potem n.n.n.)
+- [ ] TODO: Napisac testy jednostkowe
+- [ ] TODO: Zaktualizowac dokumentacje
+- [ ] TODO: Poprawic obsluge bledow
+- [ ] TODO: Dodac walidacje danych wejsciowych
+- [ ] TODO: Zrefaktoryzowac modul logowania

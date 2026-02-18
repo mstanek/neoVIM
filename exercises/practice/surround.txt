@@ -1,0 +1,174 @@
+# ============================================================================
+# Cwiczenie: nvim-surround (otaczanie tekstu)
+# ============================================================================
+#
+# Instrukcje:
+#   - ys{motion}{char}  - dodaj otoczenie (ysiw" = otocz slowo cudzyslowami)
+#   - cs{old}{new}      - zmien otoczenie (cs"' = zmien " na ')
+#   - ds{char}          - usun otoczenie (ds" = usun cudzyslowy)
+#   - yss{char}         - otocz cala linie
+#   - S{char}           - otocz w trybie Visual
+#   - Aliasy: b = ), B = }, r = ], a = >
+#
+# ============================================================================
+
+# --- Sekcja 1: Dodawanie otoczenia (ys) ---
+# ysiw" = otocz slowo cudzyslowami
+# ysiw( = otocz slowo nawiasami
+# ysiw{ = otocz slowo klamrami
+# ysiw[ = otocz slowo nawiasami kwadratowymi
+# ysiw` = otocz slowo backtick-ami
+# yss"  = otocz cala linie cudzyslowami
+
+# Otocz kazde slowo cudzyslowami (ysiw"):
+hello
+world
+username
+firstName
+lastName
+
+# Otocz kazde slowo nawiasami (ysiw)):
+value
+result
+config
+options
+data
+
+# Otocz kazda wartosc po = cudzyslowami:
+const name = Jan Kowalski
+const city = Warszawa
+const role = administrator
+const status = active
+const level = senior
+
+# Otocz wyrazenia nawiasami:
+# Uzyj visual mode: viw S) lub ysiw)
+return value + tax
+const total = price * quantity
+if isValid && isActive
+
+# --- Sekcja 2: Zmiana otoczenia (cs) ---
+# cs"'  = zmien cudzyslow podwojny na pojedynczy
+# cs"` = zmien cudzyslow podwojny na backtick
+# cs({  = zmien ( ) na { } (ze spacjami wewnatrz)
+# cs)]  = zmien ( ) na [ ]
+# cst<div> = zmien tag na <div>
+
+# Zmien " na ' (cs"'):
+const greeting = "Hello, World!";
+const message = "Welcome to our platform";
+const title = "The Great Gatsby";
+const label = "Click here to continue";
+const error = "Something went wrong";
+
+# Zmien ' na " (cs'"):
+const name = 'Jan Kowalski';
+const path = '/api/v2/users';
+const query = 'SELECT * FROM users';
+const mode = 'production';
+
+# Zmien ( na [ (cs(]):
+const items = (apple, banana, cherry);
+const coords = (10, 20, 30);
+const rgb = (255, 128, 0);
+
+# Zmien ( na { (cs({):
+const config = (host: localhost, port: 3000);
+const user = (name: Jan, role: admin);
+
+# Zmien ' na ` (cs'`):
+const template = 'Hello, ${name}!';
+const url = 'https://api.com/${version}/users';
+const sql = 'SELECT * FROM ${table}';
+
+# --- Sekcja 3: Usuwanie otoczenia (ds) ---
+# ds"   = usun cudzyslowy
+# ds(   = usun nawiasy
+# ds{   = usun klamry
+# dst   = usun tag HTML
+
+# Usun cudzyslowy (ds"):
+const a = "unnecessary quotes";
+const b = "remove these";
+const c = "and these too";
+
+# Usun nawiasy (ds():
+return (result);
+const value = (42);
+if (true) { doSomething((innerValue)); }
+
+# Usun klamry (ds{):
+const obj = {justAValue};
+return {wrappedResult};
+
+# Usun nawiasy kwadratowe (ds]):
+const first = [items][0];
+const index = [position];
+
+# Usun tagi HTML (dst):
+<b>bold text</b>
+<i>italic text</i>
+<span>inline element</span>
+<strong>important text</strong>
+<em>emphasized text</em>
+<div>block content</div>
+
+# --- Sekcja 4: Otaczanie tagami HTML ---
+# ysiwt + wpisz tag = otocz tagiem
+# cst<nowy> = zmien tag
+# dst = usun tag
+
+# Otocz slowami tagami <span> (ysiw<span>):
+highlighted
+important
+active
+selected
+
+# Otocz linie tagiem <p> (yss<p>):
+This is a paragraph of text that should be wrapped.
+Another paragraph to wrap in p tags.
+Third paragraph for practice.
+
+# Zmien tagi (cst):
+<div class="old">Change this div to section</div>
+<span>Change this span to strong</span>
+<b>Change this b to em</b>
+<h1>Change this h1 to h2</h1>
+
+# --- Sekcja 5: Praktyczne scenariusze ---
+
+# Dodaj nawiasy do warunkow (ysiw)):
+if user.isActive {
+while count < maxRetries {
+for item in collection {
+
+# Otocz string template literals (cs"` ):
+const greeting = "Hello, " + name + "!";
+const url = "https://api.com/" + version + "/users";
+const message = "Found " + count + " items";
+
+# Zmien method call na property access - usun nawiasy:
+user.getName()
+config.getTimeout()
+array.getLength()
+document.getTitle()
+
+# Dodaj cudzyslow do kluczy obiektu (ysiw"):
+const config = {
+  host: "localhost",
+  port: 3000,
+  debug: true,
+  name: "myapp",
+  version: "1.0.0",
+};
+
+# Wielopoziomowe otaczanie:
+# 1. Otocz slowo nawiasami: ysiw)
+# 2. Potem otocz nawiasy cudzyslowami: ysa("
+# Efekt: word -> (word) -> "(word)"
+
+value
+result
+output
+data
+config

@@ -1,0 +1,139 @@
+# ============================================================================
+# Cwiczenie: Rejestry (registers)
+# ============================================================================
+#
+# Instrukcje:
+#   - :reg         - pokaz zawartosc rejestrow
+#   - "ayy         - kopiuj linie do rejestru 'a'
+#   - "ap          - wklej z rejestru 'a'
+#   - ""           - domyslny rejestr (unnamed)
+#   - "0           - ostatni yank (nie delete!)
+#   - "1-"9        - historia usuniec (od najnowszego)
+#   - "+           - systemowy clipboard
+#   - "*           - selection clipboard (X11) / clipboard (macOS)
+#   - "_           - black hole register (usun bez zapisu)
+#   - "/           - ostatnie wyszukiwanie
+#   - ".           - ostatni wpisany tekst
+#   - ":           - ostatnia komenda ex
+#   - "%           - nazwa biezacego pliku
+#   - Ctrl-r {reg} - wklej rejestr w trybie Insert/Command
+#
+# ============================================================================
+
+# --- Cwiczenie 1: Nazwane rejestry "a-"z ---
+# Skopiuj kazda linie do innego rejestru, potem wklej je w odpowiedniej kolejnosci
+
+# Krok 1: "ayy na linii A, "byy na linii B, itd.
+LINIA A: const firstName = "Jan";
+LINIA B: const lastName = "Kowalski";
+LINIA C: const email = "jan@example.com";
+LINIA D: const role = "administrator";
+
+# Krok 2: Wklej rejestry w tej kolejnosci: D, B, A, C
+# Ustaw kursor tutaj i uzyj "dp, "bp, "ap, "cp
+
+
+
+
+# --- Cwiczenie 2: Rejestr "0 vs unnamed "" ---
+# "0 zawsze przechowuje ostatni yank (kopiowanie)
+# "" przechowuje ostatnia operacje (yank LUB delete)
+#
+# Cwiczenie:
+# 1. yy na "WARTOSC DO SKOPIOWANIA"
+# 2. dd na "LINIA DO USUNIECIA"
+# 3. "0p wklei skopiowana wartosc (nie usun ieta!)
+# 4. p (lub ""p) wklei usun ieta linie
+
+WARTOSC DO SKOPIOWANIA: important_data = True
+LINIA DO USUNIECIA (dd)
+Wklej "0 tutaj:
+Wklej "" tutaj:
+
+# --- Cwiczenie 3: Black hole register "_ ---
+# Usuwanie bez nadpisywania rejestru - przydatne gdy masz cos w unamed
+#
+# 1. yy na linii "ZACHOWAJ TO"
+# 2. "_dd na "USUN BEZ SLADU" (nie nadpisze rejestru!)
+# 3. p - wklei "ZACHOWAJ TO" (bo "_ pochlon al delete)
+
+ZACHOWAJ TO W REJESTRZE: export const API_KEY = "abc123";
+USUN BEZ SLADU (uzyj "_dd)
+Wklej zachowana wartosc tutaj (p):
+
+# --- Cwiczenie 4: Dopisywanie do rejestru "A (duza litera) ---
+# "ayy kopiuje do 'a', "Ayy DOPISUJE do 'a'
+#
+# 1. "ayy na linii 1
+# 2. "Ayy na linii 2
+# 3. "Ayy na linii 3
+# 4. "ap - wklei wszystkie 3 linie naraz!
+
+import { ref } from "vue";
+import { computed } from "vue";
+import { watch } from "vue";
+
+Wklej "a tutaj (wszystkie 3 importy):
+
+
+# --- Cwiczenie 5: Clipboard systemowy "+ ---
+# Skopiuj do clipboardu systemowego i wklej w innej aplikacji
+#
+# "+yy - kopiuj linie do clipboardu
+# "+p  - wklej z clipboardu
+
+Skopiuj te linie do systemowego clipboardu ("+yy):
+https://neovim.io/doc/user/change.html#registers
+Teraz wklej cos z clipboardu tutaj ("+p):
+
+
+# --- Cwiczenie 6: Rejestr wyszukiwania "/ ---
+# Po wyszukiwaniu /pattern, rejestr "/" zawiera pattern
+# Mozesz go uzyc w :s lub w trybie Insert z Ctrl-r /
+#
+# 1. Wyszukaj: /function
+# 2. Sprawdz: :reg /
+# 3. W trybie Insert: Ctrl-r / wklei "function"
+
+function hello() { return "hello"; }
+function world() { return "world"; }
+function greet(name) { return `Hello, ${name}!`; }
+
+# --- Cwiczenie 7: Rejestr ostatniego tekstu ". ---
+# ". zawiera ostatni tekst wpisany w trybie Insert
+# Przydatne do powtorzenia wpisanego tekstu w innym miejscu
+#
+# 1. Wejdz w Insert, wpisz "const x = 42;" i wyjdz (Esc)
+# 2. Przejdz w inne miejsce
+# 3. ".p - wklei "const x = 42;"
+
+Wpisz cos w Insert mode, potem wklej ". tutaj:
+Linia 1:
+Linia 2:
+Linia 3:
+
+# --- Cwiczenie 8: Makro-rejestr ---
+# Makra sa zapisywane w rejestrach! qq nagrywa do rejestru q.
+# Mozesz edytowac makro przez: "qp, edycja, "qyy
+#
+# 1. Nagraj makro: qq -> I// <Esc> -> j -> q
+# 2. Sprawdz: :reg q
+# 3. Odtwarzaj: @q lub 5@q
+
+function one() { return 1; }
+function two() { return 2; }
+function three() { return 3; }
+function four() { return 4; }
+function five() { return 5; }
+
+# --- Cwiczenie 9: Ctrl-r w trybie Insert ---
+# W trybie Insert, Ctrl-r {reg} wkleja zawartosc rejestru
+# Ctrl-r " = unnamed, Ctrl-r 0 = last yank, Ctrl-r + = clipboard
+#
+# Cwiczenie: skopiuj "WARTOSC" (yw), potem w nowych liniach
+# uzyj i/a -> Ctrl-r 0 aby wkleic bez wychodzenia z Insert mode
+
+WARTOSC
+const a = "";
+const b = "";
+const c = "";

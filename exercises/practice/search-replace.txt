@@ -1,0 +1,142 @@
+# ============================================================================
+# Cwiczenie: Wyszukiwanie i zamiana (search & replace)
+# ============================================================================
+#
+# Instrukcje:
+#   - / = szukaj w przod, ? = szukaj w tyl
+#   - n = nastepne, N = poprzednie
+#   - * = szukaj slowa pod kursorem, # = szukaj w tyl
+#   - :s/old/new/ = zamien w linii, :%s/old/new/g = zamien w pliku
+#   - Uzyj :set hlsearch do podswietlania wynikow
+#   - inccommand=split daje podglad zmian na zywo!
+#
+# ============================================================================
+
+# --- Cwiczenie 1: Proste zamiany ---
+# Zamien wszystkie "foo" na "bar": :%s/foo/bar/g
+
+The foo function returns a foo value.
+When foo is called, foo processes the foo input.
+Use foo for all foo-related operations.
+The foo module depends on foo-core and foo-utils.
+
+# --- Cwiczenie 2: snake_case na camelCase ---
+# Uzyj: :%s/\v_([a-z])/\u\1/g
+
+user_name = "Alice"
+first_name = "Bob"
+last_login_date = "2024-01-15"
+max_retry_count = 3
+is_active_user = True
+account_balance_usd = 1500.00
+profile_image_url = "/images/profile.png"
+default_page_size = 25
+created_at_timestamp = 1705312000
+api_base_url = "https://api.example.com"
+
+# --- Cwiczenie 3: Dodaj prefix do linii ---
+# Dodaj "export " na poczatku kazdej linii z "const": :%s/^const/export const/g
+
+const API_URL = "https://api.example.com";
+const MAX_RETRIES = 3;
+const TIMEOUT = 30000;
+const DEFAULT_LOCALE = "en";
+const PAGE_SIZE = 25;
+const CACHE_TTL = 3600;
+const DEBUG_MODE = false;
+const LOG_LEVEL = "info";
+
+# --- Cwiczenie 4: Zamiana kolejnosci argumentow ---
+# Zamien func(a, b) na func(b, a): :%s/\v(\w+)\((\w+), (\w+)\)/\1(\3, \2)/g
+
+add(x, y)
+multiply(a, b)
+divide(numerator, denominator)
+compare(left, right)
+swap(first, second)
+connect(host, port)
+send(message, recipient)
+format(template, data)
+
+# --- Cwiczenie 5: Otocz wartosci cudzyslowami ---
+# Z: KEY = value  ->  KEY = "value"
+# Uzyj: :%s/\v(\w+) \= (.+)/\1 = "\2"/g
+
+HOST = localhost
+PORT = 8080
+DB_NAME = myapp
+DB_USER = admin
+DB_PASS = s3cret
+REDIS_URL = redis://localhost:6379
+LOG_FILE = /var/log/app.log
+TEMP_DIR = /tmp/myapp
+SECRET_KEY = abc123def456
+ALLOWED_HOSTS = *.example.com
+
+# --- Cwiczenie 6: HTML na JSX ---
+# class -> className, for -> htmlFor, tabindex -> tabIndex
+
+<div class="container">
+  <label for="email" class="form-label">Email</label>
+  <input class="form-input" tabindex="1" />
+  <label for="password" class="form-label">Password</label>
+  <input class="form-input" tabindex="2" />
+  <button class="btn btn-primary" tabindex="3">Submit</button>
+</div>
+
+# --- Cwiczenie 7: Regex z podgladem na zywo ---
+# Zamien " na ' tylko wewnatrz console.log():
+# :%s/console\.log("\(.\{-}\)")/console.log('\1')/g
+
+console.log("Hello, world!");
+console.log("User logged in");
+const msg = "keep these double quotes";
+console.log("Processing complete");
+console.log("Error: connection failed");
+const title = "also keep these";
+console.log("Retrying in 5 seconds...");
+
+# --- Cwiczenie 8: camelCase na UPPER_SNAKE_CASE ---
+# To trudniejsze! Pomysl o \U i grupach regex.
+# Podpowiedz: :%s/\v([a-z])([A-Z])/\1_\2/g a potem :%s/.*/\U&/g
+
+maxRetries = 3
+defaultTimeout = 5000
+apiVersion = "v2"
+cacheEnabled = true
+debugMode = false
+logLevel = "warn"
+maxConnections = 50
+sessionTimeout = 1800
+
+# --- Cwiczenie 9: Zamiana w zakresie wizualnym ---
+# Zmien "error" na "warning" TYLKO w bloku 2.
+# Zaznacz blok wizualnie (V), potem :s/error/warning/g
+
+# Blok 1 -- NIE ZMIENIAJ
+Handle the error gracefully.
+Log the error message.
+Return error code to caller.
+
+# Blok 2 -- ZMIEN TUTAJ
+Handle the error gracefully.
+Log the error message.
+Return error code to caller.
+
+# Blok 3 -- NIE ZMIENIAJ
+Handle the error gracefully.
+Log the error message.
+Return error code to caller.
+
+# --- Cwiczenie 10: Grupy przechwytujace \1 / \2 ---
+# Zamien "imie nazwisko" na "nazwisko, imie":
+# :%s/\v(\w+) (\w+)/\2, \1/g
+
+Alice Johnson
+Bob Smith
+Charlie Brown
+Diana Prince
+Edward Norton
+Frank Castle
+Grace Hopper
+Helen Troy

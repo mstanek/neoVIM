@@ -1,0 +1,17 @@
+neovim
+kitty
+tmux
+ripgrep
+fd
+fzf
+lazygit
+git-delta
+yazi
+ffmpegthumbnailer
+node
+python@3.14
+imagemagick
+luarocks
+btop
+lazydocker
+tree-sitter-cli

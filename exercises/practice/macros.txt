@@ -1,0 +1,174 @@
+# ============================================================================
+# Cwiczenie: Makra (macros)
+# ============================================================================
+#
+# Instrukcje:
+#   - qq     - rozpocznij nagrywanie makra do rejestru 'q'
+#   - q      - zakoncz nagrywanie
+#   - @q     - odtwórz makro z rejestru 'q'
+#   - @@     - powtorz ostatnie makro
+#   - 10@q   - odtwórz makro 10 razy
+#   - :reg q - pokaz zawartosc rejestru q (czyli makro)
+#
+# Kluczowa zasada: makro powinno konczyc sie na poczatku NASTEPNEJ linii (j0)
+# aby mozna je bylo powtarzac!
+#
+# ============================================================================
+
+# --- Cwiczenie 1: CSV na JSON ---
+# Przeksztalc kazdy wiersz CSV w obiekt JSON.
+# Naglowki: name,email,role,department
+#
+# Oczekiwany format:
+#   { "name": "Anna Nowak", "email": "anna@company.com", "role": "developer", "department": "engineering" }
+#
+# Podpowiedz do makra (rejestr q):
+#   qq                  - zacznij nagrywanie
+#   I{ "name": "<Esc>   - dodaj poczatek
+#   f,                  - skocz do pierwszego przecinka
+#   s", "email": "<Esc> - zamien przecinek
+#   ... (powtarzaj dla kolejnych pol)
+#   A" }<Esc>           - zamknij obiekt
+#   j0                  - przejdz do nastepnej linii
+#   q                   - zakoncz nagrywanie
+
+Anna Nowak,anna@company.com,developer,engineering
+Piotr Wisniewski,piotr@company.com,designer,product
+Katarzyna Maj,kasia@company.com,manager,engineering
+Tomasz Kowalski,tomek@company.com,developer,engineering
+Ewa Dabrowska,ewa@company.com,analyst,data
+Marek Lewandowski,marek@company.com,devops,infrastructure
+Joanna Kaminska,asia@company.com,tester,quality
+Andrzej Zielinski,andrzej@company.com,developer,engineering
+Monika Szymanska,monika@company.com,designer,product
+Rafal Jankowski,rafal@company.com,developer,frontend
+Agnieszka Wojcik,aga@company.com,manager,product
+Lukasz Mazur,lukasz@company.com,developer,backend
+Natalia Krawczyk,natalia@company.com,analyst,data
+Pawel Piotrowski,pawel@company.com,devops,infrastructure
+Barbara Grabowska,basia@company.com,tester,quality
+Michal Nowakowski,michal@company.com,developer,engineering
+Aleksandra Pawlak,ola@company.com,designer,product
+Krzysztof Michalski,krzysiek@company.com,developer,frontend
+Magdalena Adamczyk,magda@company.com,manager,engineering
+Jakub Wozniak,kuba@company.com,developer,backend
+
+# --- Cwiczenie 2: Dodaj numeracje ---
+# Dodaj numer porzadkowy na poczatku kazdej linii: "1. ", "2. ", itd.
+#
+# Podpowiedz: uzyj rejestru z liczba
+#   :let @a=1          - ustaw rejestr a na 1
+#   qq                 - zacznij nagrywanie
+#   I<C-r>a. <Esc>     - wstaw numer
+#   :let @a=@a+1<CR>   - zwieksz licznik
+#   j0                 - nastepna linia
+#   q                  - zakoncz
+
+Implement user authentication
+Add password reset flow
+Create admin dashboard
+Set up email notifications
+Write API documentation
+Add unit tests for auth module
+Configure CI/CD pipeline
+Set up monitoring and alerts
+Implement rate limiting
+Add request logging middleware
+
+# --- Cwiczenie 3: Zmien format daty ---
+# Z: 2024-01-15  Na: 15/01/2024
+#
+# Podpowiedz:
+#   qq
+#   0         - poczatek linii
+#   /\d\d\d\d-<CR>  - znajdz date
+#   dwx       - usun rok i myslnik  (zostaje 01-15)
+#   f-        - znajdz myslnik miedzy miesiacem a dniem
+#   r/        - zamien na /
+#   A/2024<Esc> - (uproszczona wersja, lub lepiej: uzyj rejestru)
+#   j0q
+
+Created: 2024-01-15
+Updated: 2024-03-22
+Due: 2024-06-01
+Started: 2024-02-10
+Finished: 2024-04-30
+Reviewed: 2024-05-15
+Deployed: 2024-07-01
+Expired: 2024-12-31
+Renewed: 2024-09-20
+Cancelled: 2024-11-05
+
+# --- Cwiczenie 4: Wygeneruj HTML z listy ---
+# Przeksztalc kazda linie w element <li>:
+#   Jabłka  ->  <li>Jabłka</li>
+#
+# Proste makro:
+#   qq I<li><Esc> A</li><Esc> j0 q
+
+Jablka
+Gruszki
+Banany
+Pomarancze
+Winogrona
+Truskawki
+Maliny
+Czereśnie
+Brzoskwinie
+Sliwki
+
+# --- Cwiczenie 5: Refaktoryzacja - dodaj typ zwracany ---
+# Dodaj ": void" przed nawiasem klamrowym w kazdej funkcji:
+#   function foo() {  ->  function foo(): void {
+#
+# Makro:
+#   qq 0f{i: void <Esc> j0 q
+
+function initialize() {
+  console.log("init");
+}
+function cleanup() {
+  console.log("cleanup");
+}
+function reset() {
+  console.log("reset");
+}
+function validate() {
+  console.log("validate");
+}
+function process() {
+  console.log("process");
+}
+function render() {
+  console.log("render");
+}
+function update() {
+  console.log("update");
+}
+function destroy() {
+  console.log("destroy");
+}
+
+# --- Cwiczenie 6: Makro rekurencyjne ---
+# Makro wywolujace samo siebie: zatrzyma sie na koncu pliku lub bledzie
+#
+# qq ... @q q   <-- rekurencyjne!
+#
+# Dodaj "// TODO: review" na koncu kazdej linii z "function":
+#   :let @q=""           - wyczysc rejestr
+#   qq                   - nagrywaj
+#   /function<CR>        - znajdz nastepna function
+#   A // TODO: review<Esc> - dopisz komentarz
+#   @q                   - wywolaj rekurencyjnie
+#   q                    - zakoncz
+
+const x = 42;
+function alpha() { return 1; }
+const y = "hello";
+function beta() { return 2; }
+let z = true;
+function gamma() { return 3; }
+const w = [1, 2, 3];
+function delta() { return 4; }
+let v = null;
+function epsilon() { return 5; }

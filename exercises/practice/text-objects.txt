@@ -1,0 +1,152 @@
+# ============================================================================
+# Cwiczenie: Text Objects (obiekty tekstowe)
+# ============================================================================
+#
+# Instrukcje:
+#   - i = inner (wewnatrz), a = around (wokol, lacznie z otoczeniem)
+#   - Uzywaj z operatorami: d, c, y, v
+#   - Np: ci" = zmien wewnatrz cudzyslowow, da( = usun z nawiasami
+#   - Cwicz az text objects stana sie druga natura!
+#
+# ============================================================================
+
+# --- Sekcja 1: iw / aw (inner word / a word) ---
+# ciw - zmien slowo pod kursorem, daw - usun slowo ze spacja
+
+The quick brown fox jumps over the lazy dog.
+A beautiful morning with clear blue sky above.
+Programming is both art and science combined together.
+Every experienced developer knows the value of good tests.
+The architecture should be clean and maintainable always.
+
+# --- Sekcja 2: i" / a" / i' / a' / i` / a` (quoted strings) ---
+# ci" = zmien tresc w cudzyslowach, da" = usun lacznie z cudzyslowami
+
+const greeting = "Hello, World!";
+const name = "Jan Kowalski";
+const message = "The quick brown fox jumps over the lazy dog";
+let status = 'active';
+let mode = 'production';
+let query = 'SELECT * FROM users WHERE active = true';
+const template = `Hello, ${name}! Welcome to our ${platform}.`;
+const code = `const x = ${value + 1}`;
+const path = `${baseUrl}/api/v2/users`;
+
+# --- Sekcja 3: i( / a( (parentheses) oraz i[ / a[ i i{ / a{ ---
+# ci( = zmien wewnatrz nawiasow, da{ = usun lacznie z klamrami
+
+console.log("Hello, World!", user.name, Date.now());
+const total = calculatePrice(basePrice, taxRate, discount);
+const filtered = items.filter(item => item.isActive && item.role === "admin");
+const result = Math.max(Math.min(value, upperBound), lowerBound);
+
+const colors = [red, green, blue, yellow, purple, orange];
+const matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
+const indices = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+const selected = users[currentIndex];
+
+const config = { host: "localhost", port: 3000, debug: true };
+const response = { status: 200, data: { users: [], total: 0 } };
+function setup() { const app = createApp(); app.mount("#root"); }
+
+# --- Sekcja 4: it / at (HTML/XML tags) ---
+# cit = zmien tresc tagu, dat = usun caly tag
+
+<div class="container">This content should be changed</div>
+<span id="username">Jan Kowalski</span>
+<p class="description">A long description of the product that should be replaced entirely</p>
+<h1>Page Title Goes Here</h1>
+<a href="https://example.com">Click this link for more information</a>
+<button type="submit" class="btn btn-primary">Submit Form</button>
+<li class="list-item active">First important item in the list</li>
+
+# Zagniezdzone tagi - cwicz it/at na roznych poziomach
+<div class="outer">
+  <div class="middle">
+    <span class="inner">Deeply nested content here</span>
+  </div>
+</div>
+
+<ul class="nav">
+  <li><a href="/home">Home</a></li>
+  <li><a href="/about">About</a></li>
+  <li><a href="/contact">Contact</a></li>
+</ul>
+
+# --- Sekcja 5: Zagniezdzone struktury ---
+# Cwicz przeskakiwanie miedzy poziomami zagniezdzen
+
+const data = {
+  users: [
+    { name: "Alice", address: { city: "Warsaw", zip: "00-001" } },
+    { name: "Bob", address: { city: "Krakow", zip: "30-001" } },
+    { name: "Charlie", address: { city: "Gdansk", zip: "80-001" } },
+  ],
+  metadata: {
+    total: 3,
+    page: 1,
+    filters: { active: true, role: "admin" },
+  },
+};
+
+function processNestedData(input: { items: Array<{ id: number; tags: string[] }> }) {
+  return input.items.map((item) => ({
+    id: item.id,
+    tags: item.tags.filter((tag) => tag.startsWith("important")),
+  }));
+}
+
+if (user && (user.role === "admin" || (user.permissions && user.permissions.includes("edit")))) {
+  const result = await fetchData(buildUrl(baseUrl, { page: 1, limit: getLimit(config) }));
+  console.log(`Found ${result.total} items in ${(Date.now() - start) / 1000}s`);
+}
+
+# --- Sekcja 6: mini.ai - if/af (function), ic/ac (class) ---
+# Wymaga mini.ai plugin. if = inner function, af = around function
+
+function simpleFunction() {
+  const x = 1;
+  const y = 2;
+  return x + y;
+}
+
+const arrowFunc = (a: number, b: number): number => {
+  const sum = a + b;
+  return sum * 2;
+};
+
+class UserService {
+  private users: User[] = [];
+
+  addUser(user: User): void {
+    this.users.push(user);
+  }
+
+  removeUser(id: string): boolean {
+    const index = this.users.findIndex(u => u.id === id);
+    if (index === -1) return false;
+    this.users.splice(index, 1);
+    return true;
+  }
+
+  findByEmail(email: string): User | undefined {
+    return this.users.find(u => u.email === email);
+  }
+}
+
+# --- Sekcja 7: is / as (sentence), ip / ap (paragraph) ---
+
+This is the first sentence. This is the second sentence. And here is the third one.
+A new line starts here. It contains multiple sentences. Each can be selected with is/as.
+
+This is paragraph one.
+It has multiple lines.
+All belonging together.
+
+This is paragraph two.
+Also with multiple lines.
+Use ip/ap to select it.
+
+This is paragraph three.
+The last one in this section.
+Practice dap, yap, cap here.
